@@ -1,7 +1,7 @@
 <h1>{{photos.length}} Photos</h1>
 <div class="row">
     <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy">
-        <div class="adding" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf">
+        <div class="adding animated fadeIn" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf">
             <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
             <i class="fa fa-spinner icon-picture" style="font-size:2.5em; font-weight: 100"></i>
             <!-- <div class="uploadProgress" style="height: {{}}"></div> -->
@@ -11,14 +11,13 @@
         </div>
     </div>
     <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy" ng-repeat="photo in photos">
-        <div ng-if="photo" class="card" ui-sref="photo({imageId: photo._id})">
+        <div ng-class="{'fadeIn': photo}" ng-if="photo" class="card animated" ui-sref="photo({imageId: photo._id})">
             <div class="image"><img src="{{photo.url}}"></div>
             <div class="nav">
                 <span><i class="fa fa-cog" aria-hidden="true"></i></span>
                 <!-- <div class="detail"></div> -->
             </div>
         </div>
-        <p>{{photo._id}}</p>
     </div>
 </div>
 <div class="andy-modal" ng-if="getModal">

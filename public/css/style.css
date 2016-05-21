@@ -60,6 +60,27 @@ body {
     box-shadow: 0px 0px 0px 2px #fafafa;
     -webkit-box-shadow: 0px 0px 0px 2px #fafafa;
 }
+.photo {
+    background: #fafafa;
+    width: 100%;
+    min-height: 50%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px 0px 0px 2px #fafafa;
+    -webkit-box-shadow: 0px 0px 0px 2px #fafafa;
+}
+.photo .image {
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+.photo .image:hover img {
+    transition: 0.4s all ease-in-out;
+    transform: scale(1);
+}
 .image {
     position: absolute;
     overflow: hidden;
@@ -228,12 +249,9 @@ h3, h4 {
 }
 
 /*photo.html*/
-
-.onePhoto .card {
-    height: 600px;
-}
-.onePhoto .image {
-    height: 100%;
+.onePhoto .photo img {
+    margin: auto;
+    width: 100%;
 }
 .dragover {
     border: 1px solid #2F2F2F;

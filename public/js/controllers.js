@@ -2,8 +2,10 @@
 
 var app = angular.module('albumApp');
 
-app.controller('mainCtrl', function($scope) {
+app.controller('mainCtrl', function($scope, $timeout) {
     console.log('mainCtrl loaded');
+
+
 });
 app.controller('photosCtrl', function($scope, Upload, Image) {
     console.log('photosCtrl loaded');
