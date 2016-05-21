@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-
+require('dotenv').config();
 /**
  * Module dependencies.
  */
 
 var app = require('../app');
-var debug = require('debug')('album-app:server');
+var debug = require('debug')('photolbum:server');
 var http = require('http');
 
 /**

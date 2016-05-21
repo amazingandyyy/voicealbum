@@ -1,13 +1,24 @@
-var express = require('express');
-var router = express.Router();
+'use strict';
+
+const express = require('express');
+const router = express.Router();
+
+var multer = require('multer');
+var upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        filesize: 1000000 * 10
+    }
+});
 
 var Image = require('../models/image');
 
-router.post('/', (req, res) => {
-    // create one album with name and photos
-    Image.create(req.body,(err, image) => {
-            res.status(err ? 400 : 200).send(err || image)
-        })
+router.post('/', upload.single('newFile'), function(req, res) {
+    // console.log('req.file: ', req.file);
+    Image.upload(req.file, (err, image) => {
+        if (err) return console.log('err: ', err);
+        res.status(err ? 400 : 200).send(err || image)
+    })
 });
 router.put('/:id', (req, res) => {
     // update one image's details
@@ -34,7 +45,9 @@ router.get('/:id', (req, res) => {
 });
 router.delete('/:id', (req, res) => {
     // remove one image by id
-    Image.findByIdAndRemove({'_id': req.params.id})
+    Image.findByIdAndRemove({
+            '_id': req.params.id
+        })
         .populate('albums')
         .exec((err) => {
             res.status(err ? 400 : 200).send(err);
@@ -45,8 +58,8 @@ router.post('/:imageId/add/:albumId', (req, res) => {
     console.log('req.params', req.params);
     // create one album with name and photos
     Image.addToAlbum(req.params, (err, data) => {
-            res.status(err ? 400 : 200).send(err || data)
-        })
+        res.status(err ? 400 : 200).send(err || data)
+    })
 });
 
 module.exports = router;

@@ -1,8 +1,12 @@
 'use strict';
 
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let AWS = require('aws-sdk');
+let uuid = require('uuid');
 
-var imageSchema = new mongoose.Schema({
+let s3 = new AWS.S3();
+
+let imageSchema = new mongoose.Schema({
     url: {
         type: String
     },
@@ -16,12 +20,57 @@ var imageSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    fileName: {
+        type: String
+    },
+    detail: [],
     albums: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Album'
     }]
 });
-imageSchema.statics.addToAlbum = function(params, cb) {
+
+let bucketName = process.env.AWS_BUCKET;
+let urlBase = process.env.AWS_URL_BASE;
+
+imageSchema.statics.upload = (file, cb) => {
+    if (!file.mimetype.match(/image/)) {
+        return cb({
+            error: 'File must be image'
+        })
+    }
+    let filenameParts = file.originalname.split('.');
+    let ext;
+    if (filenameParts.length > 1) {
+        ext = "." + filenameParts.pop();
+    } else {
+        ext = '';
+    }
+
+    let key = `${uuid.v4()}${ext}`;
+
+    let params = {
+        Bucket: bucketName,
+        Key: key,
+        ACL: 'public-read',
+        Body: file.buffer
+    }
+    console.log('params: ', params);
+    s3.putObject(params, (err, result) => {
+        if (err) return cb(err);
+        console.log('err: ', err);
+        let imageUrl = `${urlBase}/${bucketName}/${key}`;
+        Image.create({
+            url: imageUrl,
+            fileName: file.originalname,
+            detail: {
+                fileType: file.mimetype
+            }
+        }, cb)
+    });
+};
+
+imageSchema.statics.addToAlbum = (params, cb) => {
     var albumId = params.albumId;
     var imageId = params.imageId;
     // console.log('albumId: ', albumId);
