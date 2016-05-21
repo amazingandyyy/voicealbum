@@ -10,7 +10,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             controller: 'photosCtrl'
         })
         .state('photo', {
-            url: '/photo',
+            url: '/photo/:imageId',
             templateUrl: '../html/photo.html',
             controller: 'photoCtrl'
         })

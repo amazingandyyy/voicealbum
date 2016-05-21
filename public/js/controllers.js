@@ -2,42 +2,70 @@
 
 var app = angular.module('albumApp');
 
-app.controller('mainCtrl', function($http, $scope) {
+app.controller('mainCtrl', function($scope) {
     console.log('mainCtrl loaded');
-
 });
-app.controller('photosCtrl', function($http, $scope, Upload) {
+app.controller('photosCtrl', function($scope, Upload, Image) {
     console.log('photosCtrl loaded');
-
+    $scope.log = "";
+    var imagesData = [];
+    Image.getAll().then(res => {
+        console.log(res.data);
+        imagesData = res.data;
+        $scope.photos = imagesData.reverse();
+    }, err => {
+        if (err) return console.log('err: ', err);
+    });
     // $scope.photos = photos;
     $scope.uploadFiles = (files) => {
-        console.log('files: ', files[0]);
-        Upload.upload({
-                url: '/api/image',
-                data: {
-                    newFile: files[0]
-                }
+        if (files.length > 0) {
+            files.forEach(file => {
+                console.log(file);
+                Upload.upload({
+                        url: '/api/image',
+                        data: {
+                            newFile: file
+                        }
+                    })
+                    .then(res => {
+                        console.log('res: ', res);
+                        console.log('res.data: ', res.data);
+                        imagesData.unshift(res.data);
+                        console.log('imagesData: ', imagesData);
+                    }, err => {
+                        console.log('err: ', err);
+                    }, evt => {
+                        console.log('evt.loaded: ', evt.loaded);
+                        console.log('evt.total: ', evt.total);
+                    })
             })
-            .then(res => {
-                console.log('res: ', res);
-                $scope.img = res.data.url;
-            }, err => {
-                console.log('err: ', err);
-            }, evt => {
-                var progressPercentage = parseInt(100.0 *
-                    evt.loaded / evt.total);
-                $scope.log = 'progress: ' + progressPercentage +
-                    '% ' + evt.config.data.file.name + '\n' +
-                    $scope.log;
-            })
+
+        }
+
     }
 
 });
-app.controller('photoCtrl', function($http, $scope) {
+app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
     console.log('photoCtrl loaded');
+    var imageId = $stateParams.imageId;
+    $scope.photo = '';
 
+    $http.get(`/api/image/${imageId}`).then(res => {
+        console.log('res: ', res.data);
+        $scope.photo = res.data;
+    }, err => {
+        console.log('err: ', err);
+    })
+    $scope.deletePhoto = (id) => {
+        console.log('id: ', id);
+        $http.delete(`/api/image/${imageId}`).then(res => {
+            $location.url('/photos')
+        }, err => {
+            console.log('err: ', err);
+        })
+    }
 });
-app.controller('albumsCtrl', function($http, $scope) {
+app.controller('albumsCtrl', function($scope) {
     console.log('albumsCtrl loaded');
     var albums = [{
         name: "Album1",

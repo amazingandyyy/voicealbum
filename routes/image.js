@@ -37,10 +37,18 @@ router.get('/', (req, res) => {
 });
 router.get('/:id', (req, res) => {
     // get one image by id
+    console.log('req.params.id: ' ,req.params.id);
     Image.findById(req.params.id)
         .populate('albums')
         .exec((err, image) => {
-            res.status(err ? 400 : 200).send(err || image);
+            res.status(err ? 400 : 200).send(err || image)
+        })
+});
+router.delete('/', (req, res) => {
+    // remove one image by id
+    Image.remove({})
+        .exec((err) => {
+            res.status(err ? 400 : 200).send(err);
         })
 });
 router.delete('/:id', (req, res) => {
@@ -48,7 +56,6 @@ router.delete('/:id', (req, res) => {
     Image.findByIdAndRemove({
             '_id': req.params.id
         })
-        .populate('albums')
         .exec((err) => {
             res.status(err ? 400 : 200).send(err);
         })

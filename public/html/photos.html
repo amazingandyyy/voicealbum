@@ -1,42 +1,41 @@
 <h1>{{photos.length}} Photos</h1>
 <div class="row">
     <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy">
-        <div class="adding" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box"
-        ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
-        accept="image/*,application/pdf" >
-        <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
-        <i class="fa fa-spinner  icon-picture" style="font-size:2.5em; font-weight: 100"></i>
+        <div class="adding" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf">
+            <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
+            <i class="fa fa-spinner icon-picture" style="font-size:2.5em; font-weight: 100"></i>
+            <!-- <div class="uploadProgress" style="height: {{}}"></div> -->
             <!-- <span class="icon-focus"></span> -->
             <!-- <p class="addPhoto">Upload photo</p> <-->
-                <h5>{{log}}</h5>
-            </-->
+            <h5>{{log}}</h5>
         </div>
     </div>
-        <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy" ng-repeat="photo in photos">
-            <div class="card" ui-sref="photo">
-                <div class="image"><img src="{{photo.url}}"></div>
-                <div class="nav">
-                    <span><i class="fa fa-cog" aria-hidden="true"></i></span>
-                    <!-- <div class="detail"></div> -->
-                </div>
+    <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy" ng-repeat="photo in photos">
+        <div ng-if="photo" class="card" ui-sref="photo({imageId: photo._id})">
+            <div class="image"><img src="{{photo.url}}"></div>
+            <div class="nav">
+                <span><i class="fa fa-cog" aria-hidden="true"></i></span>
+                <!-- <div class="detail"></div> -->
             </div>
         </div>
+        <p>{{photo._id}}</p>
+    </div>
 </div>
 <div class="andy-modal" ng-if="getModal">
     <div class="andy-modal-body">
         <h1>Add photo</h1>
         <form ng-submit="addNewPhoto()">
             <div class="form-group">
-              <label for="URL">Image Url</label>
-              <input type="text" class="form-control" ng-model="newPhoto.url">
+                <label for="URL">Image Url</label>
+                <input type="text" class="form-control" ng-model="newPhoto.url">
             </div>
             <div class="form-group">
-              <label for="URL">Title</label>
-              <input type="text" class="form-control" ng-model="newPhoto.title">
+                <label for="URL">Title</label>
+                <input type="text" class="form-control" ng-model="newPhoto.title">
             </div>
             <div class="form-group">
-              <label for="URL">Description</label>
-              <input type="text" class="form-control" ng-model="newPhoto.description">
+                <label for="URL">Description</label>
+                <input type="text" class="form-control" ng-model="newPhoto.description">
             </div>
             <hr>
             <div type="button" class="btn btn-default btn-block">Cancel</div>
