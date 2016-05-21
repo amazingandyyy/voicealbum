@@ -1,9 +1,9 @@
 <h1>{{albums.length}} Albums</h1>
 <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-andy">
-        <div class="card card-album adding">
+        <div class="card card-album adding" ng-click="toggleAddPhoto()">
             <!-- <span class="icon-focus"></span> -->
-            <p class="addPhoto" ng-click="toggleAddPhoto()">Create Album</p>
+            <p class="addPhoto">Create Album</p>
         </div>
     </div>
     <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 col-andy" ng-repeat="album in albums">

@@ -1,9 +1,13 @@
 <h1>{{photos.length}} Photos</h1>
 <div class="row">
     <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy">
-        <div class="card adding">
+        <div class="adding" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box"
+        ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
+        accept="image/*,application/pdf" >
+        <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
+        <i class="fa fa-spinner  icon-picture" style="font-size:2.5em; font-weight: 100"></i>
             <!-- <span class="icon-focus"></span> -->
-            <p class="addPhoto" ng-click="toggleAddPhoto()">Add photo</p>
+            <!-- <p class="addPhoto">Upload photo</p> -->
         </div>
     </div>
         <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy" ng-repeat="photo in photos">
@@ -20,7 +24,21 @@
     <div class="andy-modal-body">
         <h1>Add photo</h1>
         <form ng-submit="addNewPhoto()">
-            <input type="text" ng-model="newPhoto.url">
+            <div class="form-group">
+              <label for="URL">Image Url</label>
+              <input type="text" class="form-control" ng-model="newPhoto.url">
+            </div>
+            <div class="form-group">
+              <label for="URL">Title</label>
+              <input type="text" class="form-control" ng-model="newPhoto.title">
+            </div>
+            <div class="form-group">
+              <label for="URL">Description</label>
+              <input type="text" class="form-control" ng-model="newPhoto.description">
+            </div>
+            <hr>
+            <div type="button" class="btn btn-default btn-block">Cancel</div>
+            <button type="submit" class="btn btn-default btn-block">Add thie photo</button>
         </form>
     </div>
 </div>
