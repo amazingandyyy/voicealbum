@@ -34,6 +34,28 @@ app.controller('photosCtrl', function($scope, Upload, Image) {
                         console.log('res.data: ', res.data);
                         imagesData.unshift(res.data);
                         console.log('imagesData: ', imagesData);
+
+                        console.log('imageUrl: ', imageUrl);
+                        console.log('CVPkey: ', CVPkey);
+                        $http({
+                            method: 'POST',
+                            url: `https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Tags,Color`,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Ocp-Apim-Subscription-Key': `${CVPkey}`
+                            },
+                            data: {
+                                'url': `${imageUrl}`
+                            }
+
+                        }).then(res => {
+                            console.log('res from oxford: ', res.data);
+                        }, err => {
+                            console.log('err from oxford: ', err);
+                        })
+
+
+
                     }, err => {
                         console.log('err: ', err);
                     }, evt => {
@@ -41,12 +63,20 @@ app.controller('photosCtrl', function($scope, Upload, Image) {
                         console.log('evt.total: ', evt.total);
                     })
             })
-
         }
+    }
+
+
+    $scope.analyze = (imageUrl) => {
+        // var imageUrl = $scope.photo.url;
 
     }
 
+
 });
+
+
+
 app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
     console.log('photoCtrl loaded');
     var imageId = $stateParams.imageId;
