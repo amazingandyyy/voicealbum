@@ -12,13 +12,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.3.1/css/simple-line-icons.min.css">
     <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css">
     <link rel="stylesheet" href="/css/et-line-font/style.css">
-    <script src="bower_components/angular/angular.min.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="/bower_components/ng-file-upload/ng-file-upload-all.min.js"></script>
+    <!-- <script src="/bower_components/webcam/dist/webcam.min.js"></script> -->
+    <!-- <script src='/bower_components/webcamjs/webcam.min.js'></script> -->
+    <!-- <script src='/bower_components/angular-camera/dist/angular-camera.min.js'></script> -->
     <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+    <script src='/bower_components/jquery/dist/jquery.min.js'></script>
+    <script src='/bower_components/jquery-ui/jquery-ui.min.js'></script>
+    <script src='/bower_components/angular-dragdrop/src/angular-dragdrop.min.js'></script>
     <script src="js/module.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+    <script src="js/webcam.min.js"></script>
+    <script src="js/main.js"></script>
 </head>
 
 <body ng-app="albumApp" ng-controller="mainCtrl" ng-keypress="keypress($event)">
@@ -33,8 +42,9 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a ui-sref="photos"><span class="icon-pictures"></span></a></li>
-                    <li><a ui-sref="albums"><span class="icon-layers"></span></a></li>
-                    <li><a href="https://github.com/amazingandyyy/album-app" target="_blank"><span class="icon-genius"></span></a></li>
+                    <!-- <li><a ui-sref="albums"><span class="icon-layers"></span></a></li> -->
+                    <li ng-click="startWebCam()"><a><span class="icon-camera"></span></a></li>
+                    <!-- <li><a href="https://github.com/amazingandyyy/album-app" target="_blank"><span class="icon-genius"></span></a></li> -->
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -50,13 +60,57 @@
     <br>
     <br>
     <div ng-class="{'bounceIn': initializeVoiceAlbumComplete, 'fadeOut': initializeVoiceAlbumCompleteOut}" class="animated initializeVoiceAlbum">
-        <span class="icon-mic"></span><br>
+        <span class="icon-mic"></span>
+        <br>
         <h3><span class="logo">VoiceAlbum</span> initialized</h3>
     </div>
     <div ng-class="{'bounceIn': initializeVoiceAlbumOver, 'fadeOut': initializeVoiceAlbumoverOut}" class="animated initializeVoiceAlbum">
-        <span class="icon-mic"></span><br>
+        <span class="icon-mic"></span>
+        <br>
         <h3><span class="logo">VoiceAlbum</span> turned off</h3>
     </div>
+    <hr>
+
+    <div ng-if="webcamStarted" ng-class="{'bounceIn': webcamStarted}" class="animated webcam" data-drag="true" data-jqyoui-options="{revert2: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true}">
+        <!-- <webcam channel="myChannel" on-stream="onStream(stream)" on-streaming="onSuccess(data)" on-error="onError(err)"></webcam> -->
+        <div id="my_camera"></div>
+        <br>
+        <button class="btn btn-default btn-xs" value="Take Snapshot" id="takePhoto">Take photo!</button>
+        <div id="results"></div>
+        <!-- <div class="nav"><span class="pull-left">S</span> <span class="pull-left">M</span> <span class="pull-left">L</span></div> -->
+
+        <!-- <ng-camera capture-message="Cheeeese!" countdown="3" output-height="160" output-width="213" viewer-height="320" viewer-width="426" crop-height="90" crop-width="120" image-format="jpeg" jpeg-quality="100" action-message="Take picture" snapshot="vm.picture"
+            flash-fallback-url="/vendors/webcamjs/webcam.swf" overlay-url="/overlay.png" shutter-url="/shutter.mp3"></ng-camera> -->
+
+        <!-- <ng-camera
+              type="photo"
+              enabled="true"
+              width="320"
+              height="240"
+              countdown="3"
+              ng-model="media"
+              capture="capturePhoto(media)"
+              capture-message="Go!"></ng-camera> -->
+        <!-- <ng-camera
+                  capture-message="Cheeeese!"
+                  countdown="3"
+                  output-height="160"
+                  output-width="213"
+                  viewer-height="320"
+                  viewer-width="426"
+                  crop-height="90"
+                  crop-width="120"
+                  image-format="jpeg"
+                  jpeg-quality="100"
+                  action-message="Take picture"
+                  snapshot="vm.picture"
+                  flash-fallback-url="/vendors/webcamjs/webcam.swf"
+                  overlay-url="/overlay.png"
+                  shutter-url="/shutter.mp3"
+              ></ng-camera> -->
+
+    </div>
+
 </body>
 
 </html>

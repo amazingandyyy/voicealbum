@@ -1,13 +1,15 @@
 'use strict';
 
 var app = angular.module('albumApp');
+var start = false;
 
 app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
     console.log('mainCtrl loaded');
+    $scope.webcamStarted = false;
+
     var keyCode;
     var initial = 0;
     var over = 0;
-    var start = false;
     var AlbumArr = [];
     var pageIndex;
     $scope.keypress = (key) => {
@@ -32,14 +34,13 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
                 start = true;
             }, 1000)
             console.log(initial);
-            start = true;
             pageIndex = 0;
 
             if (start) {
                 Image.getAll().then(res => {
                     res.data.forEach(image => {
-                        if(AlbumArr.indexOf(image._id)==-1){
-                            AlbumArr.push(image._id);
+                        if (AlbumArr.indexOf(image._id) == -1) {
+                            AlbumArr.unshift(image._id);
                         }
                     })
                     console.log(AlbumArr);
@@ -49,9 +50,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
                 })
             }
             console.log('keyCode2: ', keyCode);
-            console.log('start: ', start);
             console.log('keyCode === 102: ', keyCode === '102');
-
         }
         if (keyCode === 98) {
             console.log('someone tends to initialize VoiceAlbum');
@@ -71,25 +70,43 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
                 start = false;
             }, 1000)
         }
-        if(start && keyCode === 102){
+        if (start && keyCode === 102) {
             console.log('next page');
-
-            pageIndex ++;
-            // console.log('AlbumArr: ', );
-            // console.log('pageIndex: ' ,);
+            pageIndex++;
             var page = pageIndex % AlbumArr.length
             $location.path(`photo/${AlbumArr[page]}`)
         }
-
-
     }
 
 
+    $scope.startWebCam = () => {
+        $scope.webcamStarted = !$scope.webcamStarted;
+    }
+    // var webcamData;
+    // $scope.onError = function(err) {
+    //     console.log('err from webcam: ', err);
+    // };
+    // $scope.onStream = function(stream) {
+    //     console.log('stream from webcam: ', stream);
+    // };
+    // $scope.onSuccess = function(data) {
+    //     console.log('webcam onSuccess:', data);
+    //     // console.log();
+    //     webcamData = data;
+    //     console.log('webcamData: ', webcamData);
+    // };
+    // $scope.myChannel = {
+    //     videoHeight: 400,
+    //     videoWidth: 300,
+    //     video: webcamData
+    // };
+    // $scope.$watch('media', function(media) {
+    //         console.log(media);
+    //     });
 
 });
+
 app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
-
-
 
     console.log('photosCtrl loaded');
     $scope.log = "";
@@ -162,10 +179,6 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
     }, err => {
         if (err) return console.log('err: ', err);
     });
-
-
-
-
 
 
     // $scope.photos = photos;
@@ -332,8 +345,6 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
     }
 
 
-
-
     $scope.filterByColor = (color) => {
         console.log('color: ', color);
         if (color === 'all') {
@@ -363,14 +374,12 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
 
 app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
     console.log('photoCtrl loaded');
-    // var $scope.analysis = [];
-
+    console.log('start: ', start);
     $scope.responsiveVoice = responsiveVoice;
-
     $scope.speak = function(item) {
-        console.log(item);
         responsiveVoice.speak(item, "US English Female");
     }
+
 
     var imageId = $stateParams.imageId;
     $scope.photo = '';
@@ -393,8 +402,11 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
             // console.log(tag);
             $scope.analysis.alltags.push(tag);
         })
-        var item = res.data.analysis[0].description.captions[0].text;
-        responsiveVoice.speak(item, "US English Female");
+        if (start) {
+            var item = res.data.analysis[0].description.captions[0].text;
+            responsiveVoice.speak(item, "US English Female");
+        }
+
     }, err => {
         console.log('err: ', err);
     })
