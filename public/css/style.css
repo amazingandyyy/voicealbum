@@ -54,6 +54,7 @@ body {
 }
 
 /* photos.html */
+
 .addinngNow {
     margin: auto;
     background: white;
@@ -70,7 +71,6 @@ body {
     padding-top: 125px;
     transform: scale(1.2);
 }
-
 .addinngNow i {
     font-weight: 900;
     opacity: 0.7;
@@ -102,6 +102,9 @@ body {
     color: white;
     border-radius: 30px;
     opacity: 0.7;
+}
+.colorTags.all {
+    background: linear-gradient( #400080, transparent), linear-gradient( 200deg, #d047d1, #ff0000, #ffff00),
 }
 .colorTags {
     width: 28px;

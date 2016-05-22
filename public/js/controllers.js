@@ -4,8 +4,25 @@ var app = angular.module('albumApp');
 
 app.controller('mainCtrl', function($scope, $timeout) {
     console.log('mainCtrl loaded');
+    var keyCode;
+    $scope.keypress = (key) => {
+        keyCode = key.keyCode;
+        console.log('key.keyCode: ', key.keyCode);
+        var initial = 0;
+        if (keyCode == 102) {
+            console.log('it is ');
+            return initial += 102;
+        } else {
+            initial == 0;
+        }
+        console.log('initial: ', initial);
+
+    }
 });
 app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
+
+
+
     console.log('photosCtrl loaded');
     $scope.log = "";
     var imagesData = [];
@@ -279,6 +296,14 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
 app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
     console.log('photoCtrl loaded');
     // var $scope.analysis = [];
+
+    $scope.responsiveVoice = responsiveVoice;
+
+    $scope.speak = function(item) {
+        console.log(item);
+        responsiveVoice.speak(item, "US English Female");
+    }
+
     var imageId = $stateParams.imageId;
     $scope.photo = '';
     $scope.analysis = [];
@@ -300,6 +325,8 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
             // console.log(tag);
             $scope.analysis.alltags.push(tag);
         })
+        var item = res.data.analysis[0].description.captions[0].text;
+        responsiveVoice.speak(item, "US English Female");
     }, err => {
         console.log('err: ', err);
     })

@@ -15,12 +15,13 @@
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="/bower_components/ng-file-upload/ng-file-upload-all.min.js"></script>
+    <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
     <script src="js/module.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
 </head>
 
-<body ng-app="albumApp" ng-controller="mainCtrl">
+<body ng-app="albumApp" ng-controller="mainCtrl" ng-keypress="keypress($event)">
     <nav class="navbar navbar-default">
         <div class="container" style="max-width: 85%">
             <!-- Brand and toggle get grouped for better mobile display -->

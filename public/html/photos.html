@@ -1,9 +1,10 @@
+<div ng-keypress="keypress($event)">
 <div ng-if="photos.length>0">
     <span class="loader" style="width: {{loader}}%;" ng-class="{'loaded': loader>100}"></span>
     <span class="loader sub-loader" style="width: {{loader}}%;" ng-class="{'loaded': loader>100}"></span>
     <h1>{{(photos | filter:searchFilter | filter:searchFilterByColor | filter:searchFilterByTags).length}} Photos</h1>
     <!-- <button type="button" class="btn btn-default btn-xs pull-right">edit</button> -->
-    <span class="colorTags filter" ng-click="filterByColor('all')"></span>
+    <span class="colorTags filter all" ng-click="filterByColor('all')"></span>
     <span ng-repeat="color in analysis.dominantColor" class="colorTags filter" style="background: {{color}}; border-color: {{color}}" ng-click="filterByColor(color)"></span>
     <br>
     <span class="tag filter" ng-click="filterByTag('all')">All <span class="tagNum">{{photos.length}}</span></span>
@@ -48,3 +49,4 @@
 <!-- <pre>
     {{analysis.accentColor | json}}
 </pre> -->
+</div>

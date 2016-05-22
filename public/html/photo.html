@@ -1,5 +1,7 @@
 <div class="onePhoto" style="background: {{photo.color}}">
-<h1>{{photo.analysis[0].description.captions[0].text}}</h1>
+    <h1>{{photo.analysis[0].description.captions[0].text}}
+        <button type="button" class="btn btn-default btn-xs" ng-click="speak(photo.analysis[0].description.captions[0].text)" ng-click='responsiveVoice.speak( "US English Female")'>Describe it to me</button>
+    </h1>
     <div class="row">
         <div class="col-md-9">
 
@@ -11,14 +13,14 @@
         </div>
         <div class="col-md-3">
             <h3>Color Tag</h3>
-            <span ng-repeat = "color in photo.analysis[0].color.dominantColors" class="colorTags" style="background: {{color}}; border-color: {{color}}"></span>
+            <span ng-repeat="color in photo.analysis[0].color.dominantColors" class="colorTags" style="background: {{color}}; border-color: {{color}}"></span>
             <h3>Featured Tags</h3>
-            <span ng-repeat = "tag in analysis.tags" class="tag">{{tag}}</span>
+            <span ng-repeat="tag in analysis.tags" class="tag">{{tag}}</span>
             <h3>Tags</h3>
             <!-- <h3>{{}}</h3> -->
-            <span ng-repeat = "tag in analysis.alltags" class="tag">{{tag}}</span>
-    <hr>
-    <button type="button" class="btn btn-default pull-left" ng-click="deletePhoto(photo._id)">delete</button>
+            <span ng-repeat="tag in analysis.alltags" class="tag">{{tag}}</span>
+            <hr>
+            <button type="button" class="btn btn-default pull-left" ng-click="deletePhoto(photo._id)">delete</button>
         </div>
     </div>
     <hr>
