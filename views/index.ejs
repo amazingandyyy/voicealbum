@@ -49,9 +49,13 @@
     <br>
     <br>
     <br>
-    <div ng-class="{'fadeIn': initializeVoiceAlbumComplete}" class="animated initializeVoiceAlbum complete">
+    <div ng-class="{'bounceIn': initializeVoiceAlbumComplete, 'fadeOut': initializeVoiceAlbumCompleteOut}" class="animated initializeVoiceAlbum">
         <span class="icon-mic"></span><br>
         <h3><span class="logo">VoiceAlbum</span> initialized</h3>
+    </div>
+    <div ng-class="{'bounceIn': initializeVoiceAlbumOver, 'fadeOut': initializeVoiceAlbumoverOut}" class="animated initializeVoiceAlbum">
+        <span class="icon-mic"></span><br>
+        <h3><span class="logo">VoiceAlbum</span> turned off</h3>
     </div>
 </body>
 

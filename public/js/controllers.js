@@ -2,32 +2,90 @@
 
 var app = angular.module('albumApp');
 
-app.controller('mainCtrl', function($scope, $timeout) {
+app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
     console.log('mainCtrl loaded');
     var keyCode;
     var initial = 0;
-
+    var over = 0;
+    var start = false;
+    var AlbumArr = [];
+    var pageIndex;
     $scope.keypress = (key) => {
+        $scope.initializeVoiceAlbumComplete = false;
+        $scope.initializeVoiceAlbumCompleteOut = false;
         keyCode = key.keyCode;
         console.log('keyCode: ', key.keyCode);
-        if (keyCode === 97) {
+        if (keyCode === 118) {
             console.log('someone tends to initialize VoiceAlbum');
-            initial += 97;
+            initial += 118;
             console.log(initial);
         } else {
             initial = 0;
         }
-            if(initial>2000){
-                console.log('VoiceAlbum initialized');
+        if (initial > 1200) {
+            console.log('VoiceAlbum initialized');
+            $scope.initializeVoiceAlbumComplete = true;
+            $timeout(function() {
+                $scope.initializeVoiceAlbumCompleteOut = true;
+            }, 1300)
+            $timeout(function() {
+                start = true;
+            }, 1000)
+            console.log(initial);
+            start = true;
+            pageIndex = 0;
 
-                
-
-
-
-
-
+            if (start) {
+                Image.getAll().then(res => {
+                    res.data.forEach(image => {
+                        if(AlbumArr.indexOf(image._id)==-1){
+                            AlbumArr.push(image._id);
+                        }
+                    })
+                    console.log(AlbumArr);
+                    $location.path(`photo/${AlbumArr[0]}`)
+                }, err => {
+                    console.log(err);
+                })
             }
+            console.log('keyCode2: ', keyCode);
+            console.log('start: ', start);
+            console.log('keyCode === 102: ', keyCode === '102');
+
+        }
+        if (keyCode === 98) {
+            console.log('someone tends to initialize VoiceAlbum');
+            over += 98;
+            console.log(initial);
+        } else {
+            over = 0;
+        }
+        if (over > 1100) {
+            console.log('VoiceAlbum initialized');
+            $scope.initializeVoiceAlbumOver = true;
+            $location.path(`/photos`)
+            $timeout(function() {
+                $scope.initializeVoiceAlbumoverOut = true;
+            }, 1300)
+            $timeout(function() {
+                start = false;
+            }, 1000)
+        }
+        if(start && keyCode === 102){
+            console.log('next page');
+
+            pageIndex ++;
+            // console.log('AlbumArr: ', );
+            // console.log('pageIndex: ' ,);
+            var page = pageIndex % AlbumArr.length
+            $location.path(`photo/${AlbumArr[page]}`)
+        }
+
+
     }
+
+
+
 });
 app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
 
