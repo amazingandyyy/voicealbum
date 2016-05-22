@@ -5,18 +5,28 @@ var app = angular.module('albumApp');
 app.controller('mainCtrl', function($scope, $timeout) {
     console.log('mainCtrl loaded');
     var keyCode;
+    var initial = 0;
+
     $scope.keypress = (key) => {
         keyCode = key.keyCode;
-        console.log('key.keyCode: ', key.keyCode);
-        var initial = 0;
-        if (keyCode == 102) {
-            console.log('it is ');
-            return initial += 102;
+        console.log('keyCode: ', key.keyCode);
+        if (keyCode === 97) {
+            console.log('someone tends to initialize VoiceAlbum');
+            initial += 97;
+            console.log(initial);
         } else {
-            initial == 0;
+            initial = 0;
         }
-        console.log('initial: ', initial);
+            if(initial>2000){
+                console.log('VoiceAlbum initialized');
 
+                
+
+
+
+
+
+            }
     }
 });
 app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {

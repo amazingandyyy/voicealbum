@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Photolbum</title>
+    <title>VoiceAlbum</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel='stylesheet' href='https://bootswatch.com/readable/bootstrap.min.css' />
@@ -27,7 +27,7 @@
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
 
-                <a class="navbar-brand" href="#"> Photolbum</a>
+                <a class="navbar-brand" href="#"> VoiceAlbum</a>
             </div>
 
             <div class="collapse navbar-collapse">
@@ -44,8 +44,15 @@
     <div class="container" style="max-width: 85%">
         <ui-view></ui-view>
     </div>
-    <br><br><br>
-    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div ng-class="{'fadeIn': initializeVoiceAlbumComplete}" class="animated initializeVoiceAlbum complete">
+        <span class="icon-mic"></span><br>
+        <h3><span class="logo">VoiceAlbum</span> initialized</h3>
+    </div>
 </body>
 
 </html>
