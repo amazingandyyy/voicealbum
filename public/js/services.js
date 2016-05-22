@@ -9,4 +9,15 @@ app.service('Image', function($http) {
             url: '/api/image/'
         });
     }
+    this.findOneAndUpdateAnalysis = (imageId, data) => {
+        console.log('imageId from service: ', imageId);
+        console.log('data from service: ', data);
+
+        return $http({
+            method: 'PUT',
+            url: `/api/image/${imageId}`,
+            data: data
+        })
+
+    }
 });

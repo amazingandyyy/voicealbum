@@ -1,10 +1,25 @@
 <div class="onePhoto" style="background: {{photo.color}}">
-<h1>Photo <button type="button" class="btn btn-default btn-xs pull-right" ng-click="deletePhoto(photo._id)">delete</button></h1>
-    <div class="photo">
-        <img src="{{photo.url}}">
+<h1>{{photo.analysis[0].description.captions[0].text}}</h1>
+    <div class="row">
+        <div class="col-md-9">
+
+            <div class="photo">
+
+                <img src="{{photo.url}}">
+            </div>
+
+        </div>
+        <div class="col-md-3">
+            <h3>Color Tag</h3>
+            <span ng-repeat = "color in photo.analysis[0].color.dominantColors" class="colorTags" style="background: {{color}}; border-color: {{color}}"></span>
+            <h3>Featured Tags</h3>
+            <span ng-repeat = "tag in analysis.tags" class="tag">{{tag}}</span>
+            <h3>Tags</h3>
+            <!-- <h3>{{}}</h3> -->
+            <span ng-repeat = "tag in analysis.alltags" class="tag">{{tag}}</span>
+    <hr>
+    <button type="button" class="btn btn-default pull-left" ng-click="deletePhoto(photo._id)">delete</button>
+        </div>
     </div>
-    <!-- <h1>Details</h1> -->
-    <h3>fileName: {{photo.fileName}}</h3>
-    <h3 ng-if="photo.albums.length > 0">albums: {{photo.albums}}</h3>
-    <button type="button" class="btn btn-default btn-xs" ng-click="analyze(photo.url)">analyze</button>
+    <hr>
 </div>

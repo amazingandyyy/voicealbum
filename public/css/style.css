@@ -1,3 +1,10 @@
+body {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 .andy-modal {
     position: absolute;
     top: 0px;
@@ -47,7 +54,93 @@ body {
 }
 
 /* photos.html */
+.addinngNow {
+    margin: auto;
+    background: white;
+    height: 300px;
+    width: 300px;
+    border-radius: 500px;
+    position: relative;
+    margin-top: 10%;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    text-align: center;
+    padding-top: 125px;
+    transform: scale(1.2);
+}
 
+.addinngNow i {
+    font-weight: 900;
+    opacity: 0.7;
+}
+.addinngNow p.addPhoto {
+    margin-top: 30px;
+}
+.addinngNow:hover {
+    background: white;
+    -webkit-animation: bounceIn2 2000ms ease-out;
+    -moz-animation: bounceIn2 2000ms ease-out;
+    -o-animation: bounceIn2 2000ms ease-out;
+    animation: bounceIn2 2000ms ease-out;
+}
+.addinngNow:hover .icon-upload {
+    opacity: 1;
+    -webkit-animation: bounceIn2 800ms ease-out;
+    -moz-animation: bounceIn2 800ms ease-out;
+    -o-animation: bounceIn2 800ms ease-out;
+    animation: bounceIn2 800ms ease-out;
+    transition: .1s all ease-in-out;
+}
+.tagNum {
+    font-family: sans-serif;
+    font-size: 0.8em;
+    background: #2F2F2F;
+    font-weight: 500;
+    padding: 0px 5px;
+    color: white;
+    border-radius: 30px;
+    opacity: 0.7;
+}
+.colorTags {
+    width: 28px;
+    height: 28px;
+    border-radius: 100px;
+    border: 0px;
+    display: inline-block;
+    margin: 5px;
+    transition: .2s all ease-in-out;
+    box-shadow: 0px 2px 2px -1px rgba(47, 47, 47, 0.8);
+    /*border: 2px solid;*/
+}
+.filter {
+    cursor: pointer;
+}
+.colorTags.filter:hover {
+    transition: .2s all ease-in-out;
+    transform: scale(1.12);
+}
+.loader {
+    background: #2F2F2F;
+    position: absolute;
+    top: 78px;
+    left: 0px;
+    height: 3px;
+    transition: .3s all ease-in-out;
+    opacity: 0.4;
+}
+.loader.loaded, .loader.sub-loader.loaded {
+    transition: 5s all ease-in-out;
+    opacity: 0;
+}
+.loader.sub-loader {
+    opacity: 0.5;
+    transform: translate(-50px, 0px);
+}
+.analysisloaded .image img {
+    opacity: 1;
+}
 .col-andy {
     padding: 0px !important;
 }
@@ -96,6 +189,7 @@ body {
     top: -20px;
     left: 0;
     transition: .2s all ease-in-out;
+    opacity: 1;
 }
 .image:hover img {
     transition: 0.4s all ease-in-out;
@@ -107,7 +201,7 @@ body {
     bottom: 20px;
     left: 10px;
     background: rgba(0, 0, 0, 0.25);
-    transition: .2s all ease-in-out;
+    transition: .1s all ease-in-out;
     color: rgba(255, 255, 255, 0.7);
     opacity: 0;
     font-weight: 100;
@@ -144,7 +238,7 @@ h3, h4 {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    border: 1px dotted #2F2F2F;
+    /*border: 1px dotted #2F2F2F;*/
     padding-top: 28%;
     cursor: pointer;
     text-align: center;
@@ -165,7 +259,7 @@ h3, h4 {
 }
 .adding:hover {
     background: white;
-    border: 1px dotted black;
+    /*border: 1px dotted black;*/
 }
 .adding:hover .icon-upload {
     opacity: 1;
@@ -249,6 +343,19 @@ h3, h4 {
 }
 
 /*photo.html*/
+
+.tag {
+    background: white;
+    padding: 2px 12px;
+    border-radius: 100px;
+    display: inline-block;
+    margin: 5px;
+    transition: .2s all ease-in-out;
+    box-shadow: 0px 2px 2px -1px rgba(47, 47, 47, 0.8);
+}
+.tag.filter {
+    cursor: pointer;
+}
 .onePhoto .photo img {
     margin: auto;
     width: 100%;

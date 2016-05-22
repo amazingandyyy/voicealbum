@@ -96,12 +96,19 @@ router.post('/', upload.single('newFile'), function(req, res) {
 
 
 });
-router.put('/:id', (req, res) => {
+router.put('/:imageId', (req, res) => {
     // update one image's details
-    Image.findByIdAndUpdate(req.params.id, req.body)
-        .exec((err, image) => {
-            res.status(err ? 400 : 200).send(err || image)
-        })
+    // console.log('req.params.imageId: ', );
+    // console.log('req.body: ', req.body);
+    var analysisData = req.body;
+    Image.findById(req.params.imageId, (err, image) => {
+        if (err || !image) return res.status(400).send(err || 'Image not found');
+        console.log('image: ', image);
+        image.analysis = analysisData;
+        image.save((err, imageWithUpdatedAnalysis) => {
+            res.status(err ? 400 : 200).send(err || imageWithUpdatedAnalysis);
+        });
+    })
 });
 router.get('/', (req, res) => {
     // get all images

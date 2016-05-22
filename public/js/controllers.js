@@ -4,25 +4,79 @@ var app = angular.module('albumApp');
 
 app.controller('mainCtrl', function($scope, $timeout) {
     console.log('mainCtrl loaded');
-
-
 });
-app.controller('photosCtrl', function($scope, Upload, Image) {
+app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
     console.log('photosCtrl loaded');
     $scope.log = "";
     var imagesData = [];
     Image.getAll().then(res => {
+        $scope.analysis = [];
+        $scope.analysis.accentColor = []
+        $scope.analysis.dominantColor = []
+        $scope.analysis.tags = []
+        var tagArr = {};
+        var tagArrFinal = {};
         console.log(res.data);
         imagesData = res.data;
         $scope.photos = imagesData.reverse();
+
+        $scope.photos.forEach(img => {
+            console.log(img.analysis[0]);
+            var color = img.analysis[0].color;
+            var tags = img.analysis[0].description.tags;
+            if ($scope.analysis.accentColor.indexOf(color.accentColor) === -1) {
+                $scope.analysis.accentColor.push(color.accentColor)
+            }
+            if ($scope.analysis.dominantColor.indexOf(color.dominantColorBackground) === -1) {
+                $scope.analysis.dominantColor.push(color.dominantColorBackground)
+            }
+            if ($scope.analysis.dominantColor.indexOf(color.dominantColorForeground) === -1) {
+                $scope.analysis.dominantColor.push(color.dominantColorForeground)
+            }
+
+            tags.forEach(tag => {
+                    if (!tagArr[tag]) {
+                        tagArr[tag] = 1;
+                    } else {
+                        tagArr[tag] += 1;
+                    }
+            })
+
+            console.log('tagArr: ', tagArr);
+
+            $scope.analysis.tags = tagArr;
+            // tagArr.forEach(tag=>{
+            //     if(tagArrFinal.indexOf(tag) === -1){
+            //         tagArrFinal[tag] = 1
+            //     }else{
+            //         console.log(tagArrFinal.indexOf(tag));
+            //         tagArrFinal[tag] += 1
+            //     }
+            // })
+            // console.log('tagArrFinal: ', tagArrFinal);
+
+            // console.log($scope.analysis.accentColor);
+            // console.log($scope.analysis.tags);
+        })
+
     }, err => {
         if (err) return console.log('err: ', err);
     });
+
+
+
+
+
+
     // $scope.photos = photos;
     $scope.uploadFiles = (files) => {
+        $scope.loader = 0;
         if (files.length > 0) {
             files.forEach(file => {
-                console.log(file);
+                // console.log(file);
+                $timeout(function() {
+                    $scope.loader += 70 * (1 / files.length) * Math.random();
+                }, 200);
                 Upload.upload({
                         url: '/api/image',
                         data: {
@@ -30,16 +84,17 @@ app.controller('photosCtrl', function($scope, Upload, Image) {
                         }
                     })
                     .then(res => {
-                        console.log('res: ', res);
-                        console.log('res.data: ', res.data);
-                        imagesData.unshift(res.data);
-                        console.log('imagesData: ', imagesData);
 
-                        console.log('imageUrl: ', imageUrl);
-                        console.log('CVPkey: ', CVPkey);
+                        imagesData.unshift(res.data);
+                        // var index = imagesData.indexOf(res.data);
+                        // console.log(index);
+
+                        let CVPkey = 'f6eca23640c145bf95cf6784b8e24652';
+                        var imageUrl = res.data.url;
+                        var imageId = res.data._id;
                         $http({
                             method: 'POST',
-                            url: `https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Tags,Color`,
+                            url: `https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Tags,Color,Description`,
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Ocp-Apim-Subscription-Key': `${CVPkey}`
@@ -47,29 +102,96 @@ app.controller('photosCtrl', function($scope, Upload, Image) {
                             data: {
                                 'url': `${imageUrl}`
                             }
-
                         }).then(res => {
-                            console.log('res from oxford: ', res.data);
+                            // console.log('res from oxford: ', res.data);
+                            Image.findOneAndUpdateAnalysis(imageId, res.data).then(function(res) {
+                                console.log('imageWithUpdatedAnalysis: ', res);
+                                // imagesData.splice(index,1);
+                                // imagesData.unshift(res.data);
+                                var res = 100 - $scope.loader;
+                                console.log('resss: ', res);
+                                $scope.loader += res * (1 / files.length) + 20;
+                                console.log($scope.loader);
+
+                                Image.getAll().then(res => {
+                                    $scope.analysis = [];
+                                    $scope.analysis.accentColor = []
+                                    $scope.analysis.dominantColor = []
+                                    $scope.analysis.tags = []
+                                    var tagArr = {};
+                                    var tagArrFinal = {};
+                                    console.log(res.data);
+                                    imagesData = res.data;
+
+                                    imagesData.forEach(img => {
+                                        // console.log(img.analysis[0]);
+                                        var color = img.analysis[0].color;
+                                        var tags = img.analysis[0].description.tags;
+                                        if ($scope.analysis.accentColor.indexOf(color.accentColor) === -1) {
+                                            $scope.analysis.accentColor.push(color.accentColor)
+                                        }
+                                        if ($scope.analysis.dominantColor.indexOf(color.dominantColorBackground) === -1) {
+                                            $scope.analysis.dominantColor.push(color.dominantColorBackground)
+                                        }
+                                        if ($scope.analysis.dominantColor.indexOf(color.dominantColorForeground) === -1) {
+                                            $scope.analysis.dominantColor.push(color.dominantColorForeground)
+                                        }
+
+                                        tags.forEach(tag => {
+                                            if (tag.confidence > 0.7) {
+                                                if (!tagArr[tag.name]) {
+                                                    tagArr[tag.name] = 1;
+                                                } else {
+                                                    tagArr[tag.name] += 1;
+                                                }
+                                            }
+                                        })
+                                        $scope.analysis.tags = tagArr;
+                                    })
+
+                                }, err => {
+                                    if (err) return console.log('err: ', err);
+                                });
+
+                            })
+
                         }, err => {
                             console.log('err from oxford: ', err);
                         })
-
-
 
                     }, err => {
                         console.log('err: ', err);
                     }, evt => {
                         console.log('evt.loaded: ', evt.loaded);
-                        console.log('evt.total: ', evt.total);
+                        // console.log('evt.total: ', evt.total);
                     })
             })
         }
     }
 
 
-    $scope.analyze = (imageUrl) => {
-        // var imageUrl = $scope.photo.url;
 
+
+    $scope.filterByColor = (color) => {
+        console.log('color: ', color);
+        if(color === 'all'){
+            $scope.searchFilterByColor = '';
+            console.log('show all color');
+        }else{
+            console.log('filter by color: ', color);
+            $scope.searchFilterByColor = `${color}`
+        }
+
+    }
+    $scope.filterByTag = (tag) => {
+        if(tag === 'all'){
+            $scope.searchFilterByTags = '';
+            console.log('show all tags');
+
+        }else{
+            console.log('filter by tag: ', tag);
+            $scope.searchFilterByTags = `${tag}`
+        }
     }
 
 
@@ -79,23 +201,42 @@ app.controller('photosCtrl', function($scope, Upload, Image) {
 
 app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
     console.log('photoCtrl loaded');
+    // var $scope.analysis = [];
     var imageId = $stateParams.imageId;
     $scope.photo = '';
+    $scope.analysis = [];
+    $scope.analysis.tags = [];
+    $scope.analysis.alltags = [];
 
     $http.get(`/api/image/${imageId}`).then(res => {
         console.log('res: ', res.data);
         $scope.photo = res.data;
+        // var tagsArr = .filter(tag=>{
+        //     tag.confidence > 0.6;
+        // })
+        res.data.analysis[0].tags.sort().forEach(tag => {
+            if (tag.confidence > 0.7) {
+                $scope.analysis.tags.push(tag.name);
+            }
+        })
+        res.data.analysis[0].description.tags.forEach(tag=>{
+            console.log(tag);
+                $scope.analysis.alltags.push(tag);
+        })
     }, err => {
         console.log('err: ', err);
     })
     $scope.deletePhoto = (id) => {
-        console.log('id: ', id);
-        $http.delete(`/api/image/${imageId}`).then(res => {
-            $location.url('/photos')
-        }, err => {
-            console.log('err: ', err);
-        })
-    }
+            console.log('id: ', id);
+            $http.delete(`/api/image/${imageId}`).then(res => {
+                $location.url('/photos')
+            }, err => {
+                console.log('err: ', err);
+            })
+        }
+
+        // console.log($scope.photo.analysis[0].tags);
+
 });
 app.controller('albumsCtrl', function($scope) {
     console.log('albumsCtrl loaded');

@@ -1,44 +1,50 @@
-<h1>{{photos.length}} Photos</h1>
-<div class="row">
-    <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy">
-        <div class="adding animated fadeIn" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf">
-            <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
-            <i class="fa fa-spinner icon-picture" style="font-size:2.5em; font-weight: 100"></i>
-            <!-- <div class="uploadProgress" style="height: {{}}"></div> -->
-            <!-- <span class="icon-focus"></span> -->
-            <!-- <p class="addPhoto">Upload photo</p> <-->
-            <h5>{{log}}</h5>
-        </div>
+<div ng-if="photos.length>0">
+    <span class="loader" style="width: {{loader}}%;" ng-class="{'loaded': loader>100}"></span>
+    <span class="loader sub-loader" style="width: {{loader}}%;" ng-class="{'loaded': loader>100}"></span>
+    <h1>{{(photos | filter:searchFilter | filter:searchFilterByColor | filter:searchFilterByTags).length}} Photos</h1>
+    <!-- <button type="button" class="btn btn-default btn-xs pull-right">edit</button> -->
+    <span class="colorTags filter" ng-click="filterByColor('all')"></span>
+    <span ng-repeat="color in analysis.dominantColor" class="colorTags filter" style="background: {{color}}; border-color: {{color}}" ng-click="filterByColor(color)"></span>
+    <br>
+    <span class="tag filter" ng-click="filterByTag('all')">All <span class="tagNum">{{photos.length}}</span></span>
+    <span ng-repeat="(key, value) in analysis.tags" class="tag filter" ng-click="filterByTag(key)">{{key}} <span class="tagNum">{{value}}</span></span>
+    <br><br>
+    <div class="form-group">
+      <input type="text"class="form-control" ng-model="searchFilter" placeholder="search">
     </div>
-    <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy" ng-repeat="photo in photos">
-        <div ng-class="{'fadeIn': photo}" ng-if="photo" class="card animated" ui-sref="photo({imageId: photo._id})">
-            <div class="image"><img src="{{photo.url}}"></div>
-            <div class="nav">
-                <span><i class="fa fa-cog" aria-hidden="true"></i></span>
-                <!-- <div class="detail"></div> -->
+    <hr>
+    <div class="row">
+        <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy">
+            <div class="adding animated fadeIn" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf">
+                <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
+                <i class="fa fa-spinner icon-picture" style="font-size:2.5em; font-weight: 100"></i>
+                <!-- <div class="uploadProgress" style="height: {{}}"></div> -->
+                <!-- <span class="icon-focus"></span> -->
+                <!-- <p class="addPhoto">Upload photo</p> <-->
             </div>
+        </div>
+        <div class="col-xs-4 col-sm-6 col-md-4 col-lg-3 col-andy" ng-repeat="photo in photos | filter:searchFilter | filter:searchFilterByColor | filter:searchFilterByTags">
+            <div ng-class="{'fadeIn': photo, 'analysisloaded': photo.analysis.length>0}" ng-if="photo" class="card animated" ui-sref="photo({imageId: photo._id})">
+                <div class="image"><img src="{{photo.url}}"></div>
+                <!-- <div class="nav">
+                <span><i class="fa fa-heart" aria-hidden="true"></i></span>
+            </div> -->
+            </div>
+            <!-- <p>{{photo.analysis[0].color}}</p> -->
+            <!-- <p>{{photo.analysis[0].tags}}</p> -->
         </div>
     </div>
 </div>
-<div class="andy-modal" ng-if="getModal">
-    <div class="andy-modal-body">
-        <h1>Add photo</h1>
-        <form ng-submit="addNewPhoto()">
-            <div class="form-group">
-                <label for="URL">Image Url</label>
-                <input type="text" class="form-control" ng-model="newPhoto.url">
-            </div>
-            <div class="form-group">
-                <label for="URL">Title</label>
-                <input type="text" class="form-control" ng-model="newPhoto.title">
-            </div>
-            <div class="form-group">
-                <label for="URL">Description</label>
-                <input type="text" class="form-control" ng-model="newPhoto.description">
-            </div>
-            <hr>
-            <div type="button" class="btn btn-default btn-block">Cancel</div>
-            <button type="submit" class="btn btn-default btn-block">Add thie photo</button>
-        </form>
+<div ng-if="photos.length===0">
+    <div class="addinngNow" ngf-select="uploadFiles($files)" multiple="multiple" ngf-drop="uploadFiles($files)" ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf">
+        <i class="fa fa-spinner icon-upload" style="font-size:2em; font-weight: 100"></i>
+        <i class="fa fa-spinner icon-picture" style="font-size:2.5em; font-weight: 100"></i>
     </div>
 </div>
+
+
+
+
+<!-- <pre>
+    {{analysis.accentColor | json}}
+</pre> -->
