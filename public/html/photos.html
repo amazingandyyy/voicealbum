@@ -7,7 +7,7 @@
     <span ng-repeat="color in analysis.dominantColor" class="colorTags filter" style="background: {{color}}; border-color: {{color}}" ng-click="filterByColor(color)"></span>
     <br>
     <span class="tag filter" ng-click="filterByTag('all')">All <span class="tagNum">{{photos.length}}</span></span>
-    <span ng-repeat="(key, value) in analysis.tags" class="tag filter" ng-click="filterByTag(key)">{{key}} <span class="tagNum">{{value}}</span></span>
+    <span ng-repeat="tag in analysis.tags | limitTo:'25'" class="tag filter" ng-click="filterByTag(tag.key)">{{tag.key}} <span class="tagNum">{{tag.value}}</span></span>
     <br><br>
     <div class="form-group">
       <input type="text"class="form-control" ng-model="searchFilter" placeholder="search">
