@@ -234,10 +234,7 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
                                     var tagArrFinal = {};
                                     console.log(res.data);
                                     imagesData = res.data;
-                                    $scope.photos = imagesData.reverse();
-                                    $scope.tagValue = () => {
-
-                                    }
+                                    // $scope.photos = imagesData.reverse();
                                     $scope.photos.forEach(img => {
                                         console.log(img.analysis[0]);
                                         var color = img.analysis[0].color;
