@@ -1,4 +1,4 @@
-<div class="onePhoto" style="background: {{photo.color}}">
+<div class="onePhoto" style="background: {{photo.color}}" ng-keypress="keypress($event)">
     <h1>{{photo.analysis[0].description.captions[0].text}}
         <button type="button" class="btn btn-default btn-xs" ng-click="speak(photo.analysis[0].description.captions[0].text)" ng-click='responsiveVoice.speak( "US English Female")'>Describe it to me</button>
     </h1>

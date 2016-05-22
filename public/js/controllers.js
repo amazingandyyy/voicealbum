@@ -2,12 +2,16 @@
 
 var app = angular.module('albumApp');
 var start = false;
+var keyCode;
 
-app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
+app.controller('mainCtrl', function($scope, $timeout, Image, $location, $stateParams, $http) {
     console.log('mainCtrl loaded');
+    $scope.start = () => {
+        start = !start;
+        $scope.quoteActived = !$scope.quoteActived
+    }
     $scope.webcamStarted = false;
 
-    var keyCode;
     var initial = 0;
     var over = 0;
     var AlbumArr = [];
@@ -17,16 +21,37 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
         $scope.initializeVoiceAlbumCompleteOut = false;
         keyCode = key.keyCode;
         console.log('keyCode: ', key.keyCode);
-        if (keyCode === 118) {
+        if (keyCode === 113) {
+            responsiveVoice.speak(`This is intorduction and tips for VoiceAlbum.
+                                    Voice Album is the world's first photo album that can be read by just listining.
+                                    Press A, five times to turn on Voice Album.
+                                    Once Voice Album is been turned on, press A, again to start to listen to the Album.
+                                    Press D to listen to the same phote again.
+                                    Press S for next photo.
+                                    After all, press F five times to turn off Voice Album.
+                                    If you want to listen to tips again, just press Q.
+                                    Thanks for using. Hope you enjoy it.`, "UK English Male");
+        }
+        if (keyCode === 97) {
             console.log('someone tends to initialize VoiceAlbum');
-            initial += 118;
+            initial += 97;
             console.log(initial);
         } else {
             initial = 0;
         }
-        if (initial > 1200) {
+        if (initial > 97 * 5 - 1) {
+            responsiveVoice.speak(`You just turned on Voice Album.
+                                Here are some tips:
+                                Press A to start listen to the album.
+                                Press S to repeat the same phote again.
+                                Press D to view next photo.
+                                Press F five timse to turned off and leave the album.
+                                Hope you enjoy it!`, "UK English Male");
+
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumComplete = true;
+            $scope.quoteActived = true;
+
             $timeout(function() {
                 $scope.initializeVoiceAlbumCompleteOut = true;
             }, 1300)
@@ -43,8 +68,9 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
                             AlbumArr.unshift(image._id);
                         }
                     })
-                    console.log(AlbumArr);
                     $location.path(`photo/${AlbumArr[0]}`)
+                    console.log(AlbumArr);
+
                 }, err => {
                     console.log(err);
                 })
@@ -52,57 +78,69 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location) {
             console.log('keyCode2: ', keyCode);
             console.log('keyCode === 102: ', keyCode === '102');
         }
-        if (keyCode === 98) {
-            console.log('someone tends to initialize VoiceAlbum');
-            over += 98;
+        if (keyCode === 102) {
+            console.log('someone tends to turn off VoiceAlbum');
+            over += 102;
             console.log(initial);
         } else {
             over = 0;
         }
-        if (over > 1100) {
+        if (over > 102 * 5 - 1) {
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumOver = true;
-            $location.path(`/photos`)
+            $scope.quoteActived = false;
+            responsiveVoice.speak('Voice Album turned off. If you want to turn on again, just press A 5 times. See you next time.', "US English Female");
             $timeout(function() {
                 $scope.initializeVoiceAlbumoverOut = true;
             }, 1300)
             $timeout(function() {
                 start = false;
+                $location.path(`photos`)
             }, 1000)
         }
-        if (start && keyCode === 102) {
+        if (start && keyCode === 100) {
             console.log('next page');
             pageIndex++;
             var page = pageIndex % AlbumArr.length
             $location.path(`photo/${AlbumArr[page]}`)
         }
+        if (start && keyCode === 115) {
+            console.log('read again: ', $stateParams);
+            var imageId = $stateParams.imageId;
+            $http.get(`/api/image/${imageId}`).then(res => {
+                var quote = res.data.analysis[0].description.captions[0].text;
+                responsiveVoice.speak(quote, "US English Female");
+            }, err => {
+                console.log('err: ', err);
+            })
+        }
     }
 
 
     $scope.startWebCam = () => {
-        $scope.webcamStarted = !$scope.webcamStarted;
-    }
-    // var webcamData;
-    // $scope.onError = function(err) {
-    //     console.log('err from webcam: ', err);
-    // };
-    // $scope.onStream = function(stream) {
-    //     console.log('stream from webcam: ', stream);
-    // };
-    // $scope.onSuccess = function(data) {
-    //     console.log('webcam onSuccess:', data);
-    //     // console.log();
-    //     webcamData = data;
-    //     console.log('webcamData: ', webcamData);
-    // };
-    // $scope.myChannel = {
-    //     videoHeight: 400,
-    //     videoWidth: 300,
-    //     video: webcamData
-    // };
-    // $scope.$watch('media', function(media) {
-    //         console.log(media);
-    //     });
+            $scope.webcamStarted = !$scope.webcamStarted;
+        }
+        // var webcamData;
+        // $scope.onError = function(err) {
+        //     console.log('err from webcam: ', err);
+        // };
+        // $scope.onStream = function(stream) {
+        //     console.log('stream from webcam: ', stream);
+        // };
+        // $scope.onSuccess = function(data) {
+        //     console.log('webcam onSuccess:', data);
+        //     // console.log();
+        //     webcamData = data;
+        //     console.log('webcamData: ', webcamData);
+        // };
+        // $scope.myChannel = {
+        //     videoHeight: 400,
+        //     videoWidth: 300,
+        //     video: webcamData
+        // };
+        // $scope.$watch('media', function(media) {
+        //         console.log(media);
+        //     });
 
 });
 
@@ -376,8 +414,17 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
     $scope.speak = function(item) {
         responsiveVoice.speak(item, "US English Female");
     }
-
-
+    // $scope.keypressS = (key) => {
+        console.log('y');
+        // var item = $scope.photo.analysis[0].description.captions[0].text;
+        // console.log('key: ' ,key);
+        // console.log('item: ' ,item);
+        // if (keyCode === 115) {
+            // console.log('read again: ');
+            // console.log('read again: ', item);
+            // responsiveVoice.speak(item, "US English Female");
+        // }
+    // }
     var imageId = $stateParams.imageId;
     $scope.photo = '';
     $scope.analysis = [];
@@ -399,11 +446,11 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
             // console.log(tag);
             $scope.analysis.alltags.push(tag);
         })
+        var item;
         if (start) {
-            var item = res.data.analysis[0].description.captions[0].text;
+            item = res.data.analysis[0].description.captions[0].text;
             responsiveVoice.speak(item, "US English Female");
         }
-
     }, err => {
         console.log('err: ', err);
     })
