@@ -24,7 +24,8 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
     var pageIndex;
 
     $scope.keypress = (key) => {
-        function empty(){
+        function empty() {
+            copy = '';
             $scope.copy = null
         }
         $scope.initializeVoiceAlbumComplete = false;
@@ -36,16 +37,16 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
                                     VoiceAlbum is world's first photo album designed for blind-people.
                                     Here are some tips:
 
-                                    Long Press A to turn on VoiceAlbum.
-                                    Once Voice Album is been turned on, press A again, to start to listen to photos.
+                                    Long Press [A] to turn on VoiceAlbum.
+                                    Once Voice Album is been turned on, press [A] again, to start to listen to photos.
                                     When listening to photos, you can
-                                    Press D to replay.
-                                    Press S for next photo.
-                                    After all, long press F to turn off Voice Album.
-                                    By the way, you can press 1 or 2 to let Christina or John read for you.
+                                    Press [D] to replay.
+                                    Press [S] for next photo.
+                                    After all, long press [F] to turn off Voice Album.
+                                    By the way, you can press [1] or [2] to let Christina or John read for you.
                                     Thanks for using VoiceAlbum. Hope you enjoy it.`
             $scope.copy = copy;
-            responsiveVoice.speak(`${copy}`, `${reader}`,{
+            responsiveVoice.speak(`${copy}`, `${reader}`, {
                 onend: empty
             });
         }
@@ -53,17 +54,27 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('someone tends to initialize VoiceAlbum');
             initial += 97;
             console.log(initial);
+            $scope.copy = 'Press [A] for 3 seconds to turn on VoiceAlbum';
+            $timeout(function() {
+                $scope.copy = null;
+            }, 2500)
         } else {
             initial = 0;
         }
         if (initial > 97 * 8 - 1) {
-            responsiveVoice.speak(`You just turned on Voice Album.
+            copy = `You just turned on Voice Album.
                                 You have ${totalPhotos} photos totally.
                                 Press A to start.
                                 Long press F to turn off.
                                 For more tips, just Press Q.
                                 Now, Press A to start.
-                                Enjoy it!`, `${reader}`);
+                                Enjoy it!`, `${reader}`
+                                if(!start){
+                                    $scope.copy = null
+                                    responsiveVoice.speak(`${copy}`, `${reader}`, {
+                                        onend: empty
+                                    });
+}
             // responsiveVoice.speak(`You just turned on Voice Album.
             //                     Press A to start listen to the album.
             //                     Press F five timse to turned off and leave the album.
@@ -105,6 +116,12 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('someone tends to turn off VoiceAlbum');
             over += 102;
             console.log(over);
+            if(start){
+                $scope.copy = 'Press [F] for 3 seconds to turn off VoiceAlbum';
+                $timeout(function() {
+                    $scope.copy = null;
+                }, 2500)
+            }
         } else {
             over = 0;
         }
@@ -112,7 +129,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumOver = true;
             $scope.quoteActived = false;
-            responsiveVoice.speak('Turned off Voice Album . Long press A to turn on again. See you next time.', `${reader}`);
+            copy = 'VoiceAlbum turned off . Long press A to turn on again. See you next time.', `${reader}`;
+            $scope.copy = null
+            responsiveVoice.speak(`${copy}`, `${reader}`, {
+                onend: empty
+            });
             $timeout(function() {
                 $scope.initializeVoiceAlbumoverOut = true;
             }, 1300)
@@ -125,7 +146,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('next page');
             pageIndex++;
             var page = pageIndex % AlbumArr.length
-            $location.path(`photo/${AlbumArr[page]}`)
+            $location.path(`photo/${AlbumArr[page]}`);
+            $scope.copy = 'Nexr page';
+            $timeout(function() {
+                $scope.copy = null;
+            }, 800)
         }
         if (keyCode === 109) {
             console.log('responsiveVoice stops');
@@ -137,9 +162,10 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('read again: ', $stateParams);
             var imageId = $stateParams.imageId;
             $http.get(`/api/image/${imageId}`).then(res => {
-                var quote = res.data.analysis[0].description.captions[0].text + '.  Key words are, ' + res.data.analysis[0].description.tags;;
-                responsiveVoice.speak(quote, `${reader}`, {
-                    rate: 0.9
+                copy = res.data.analysis[0].description.captions[0].text + '.  Key words are, ' + res.data.analysis[0].description.tags;
+                $scope.copy = 'Replay';
+                responsiveVoice.speak(`${copy}`, `${reader}`, {
+                    onend: empty
                 });
             }, err => {
                 console.log('err: ', err);
@@ -155,7 +181,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         if (keyCode === 49) {
             reader = 'US English Female';
             // if (start) {
-            responsiveVoice.speak('Hi, this is Christina.', `${reader}`);
+            copy = 'Hi, this is Christina.', `${reader}`;
+            $scope.copy = copy;
+            responsiveVoice.speak(`${copy}`, `${reader}`, {
+                onend: empty
+            });
             // }
         } else {
             share = 0;
@@ -163,7 +193,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         if (keyCode === 50) {
             reader = 'UK English Male';
             // if (start) {
-            responsiveVoice.speak('Hi, this is John.', `${reader}`);
+            copy = 'Hi, this is John.', `${reader}`;
+            $scope.copy = copy;
+            responsiveVoice.speak(`${copy}`, `${reader}`, {
+                onend: empty
+            });
             // }
         } else {
             share = 0;
