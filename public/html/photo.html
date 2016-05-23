@@ -1,6 +1,5 @@
 <div class="onePhoto" style="background: {{photo.color}}" ng-keypress="keypress($event)">
     <h1>{{photo.analysis[0].description.captions[0].text}}
-        <button type="button" class="btn btn-default btn-xs" ng-click="speak(photo.analysis[0].description.captions[0].text)" ng-click='responsiveVoice.speak( "US English Female")'>Describe it to me</button>
     </h1>
     <div class="row">
         <div class="col-md-9">
@@ -8,10 +7,10 @@
                 <img src="{{photo.url}}">
             </div>
             <hr>
+
         </div>
         <div class="col-md-3">
-            <div share-square="true" share-links="Facebook" share-url="photo.url" share-title="photo.analysis[0].description.captions[0].text"></div>
-            <span class="shareFb" fb-like  share-links="Facebook" share-url="photo.url" share-title="photo.analysis[0].description.captions[0].text"></span>
+            <!-- <span class="shareFb" fb-like  share-links="Facebook" share-url="photo.url" share-title="photo.analysis[0].description.captions[0].text"></span> -->
             <!-- <button type="button" ng-click="logInfo()" class="btn btn-default">info</button> -->
             <hr>
             <h3>Featured Tags</h3>
@@ -22,9 +21,14 @@
             <!-- <h3>{{}}</h3> -->
             <span ng-repeat="tag in analysis.alltags" class="tag">{{tag}}</span>
             <hr>
-            <input id="myFileInput" type="file" accept="image/*;capture=camera" capture="camera">
+            <button type="button" class="btn btn-default btn-md" ng-click="speak(photo.analysis[0].description.captions[0].text)" ng-click='responsiveVoice.speak( "US English Female")'>Describe it to me</button>
+            <br>
+            <br>
+            <button type="button" class="btn btn-default btn-md" ng-click="deletePhoto(photo._id)">delete</button>
             <hr>
-            <button type="button" class="btn btn-default pull-left" ng-click="deletePhoto(photo._id)">delete</button>
+            <!-- <input id="myFileInput" type="file" accept="image/*;capture=camera" capture="camera">
+            <hr> -->
+
         </div>
     </div>
 </div>

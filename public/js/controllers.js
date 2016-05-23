@@ -30,6 +30,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
                                     Press D to listen to the same phote again.
                                     Press S for next photo.
                                     After all, press F five times to turn off Voice Album.
+                                    Press Tab and Enter to share to Facebook.
                                     If you want to listen to tips again, just press Q.
                                     Thanks for using. Hope you enjoy it.`, "UK English Male");
         }
@@ -42,17 +43,19 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         }
         if (initial > 97 * 5 - 1) {
             responsiveVoice.speak(`You just turned on Voice Album.
-                                Here are some tips:
                                 Press A to start listen to the album.
                                 Press S to repeat the same phote again.
                                 Press D to view next photo.
                                 Press F five timse to turned off and leave the album.
                                 Hope you enjoy it!`, "UK English Male");
+            // responsiveVoice.speak(`You just turned on Voice Album.
+            //                     Press A to start listen to the album.
+            //                     Press F five timse to turned off and leave the album.
+            //                     Enjoy it!`, "UK English Male");
 
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumComplete = true;
             $scope.quoteActived = true;
-
             $timeout(function() {
                 $scope.initializeVoiceAlbumCompleteOut = true;
             }, 1300)
@@ -64,12 +67,15 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
 
             if (start) {
                 Image.getAll().then(res => {
+                    console.log('ressss: ', res.data[0]._id);
                     res.data.forEach(image => {
                         if (AlbumArr.indexOf(image._id) == -1) {
                             AlbumArr.unshift(image._id);
                         }
                     })
-                    $location.path(`photo/${AlbumArr[0]}`)
+                    if(AlbumArr.length === res.data.length){
+                        $location.path(`photo/${AlbumArr[0]}`);
+                    }
                     console.log(AlbumArr);
 
                 }, err => {
