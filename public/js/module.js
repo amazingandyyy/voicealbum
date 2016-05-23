@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('albumApp', ['ui.router', 'ngFileUpload', 'ngDragDrop']);
+var app = angular.module('albumApp', ['ui.router', 'ngFileUpload', 'ngDragDrop', 'angulike']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
