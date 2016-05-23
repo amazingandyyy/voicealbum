@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
-const MONGOURL = 'mongodb://localhost/photolbum';
+const MONGOURL = process.env.MONGODB_URI || 'mongodb://localhost/photolbum';
 
 mongoose.connect(MONGOURL, err=>{
     console.log(err || `MongoDV connected to ${MONGOURL}`);

@@ -9,13 +9,15 @@
 
                 <img src="{{photo.url}}">
             </div>
-
+<hr>
         </div>
         <div class="col-md-3">
-            <h3>Color Tag</h3>
-            <span ng-repeat="color in photo.analysis[0].color.dominantColors" class="colorTags" style="background: {{color}}; border-color: {{color}}"></span>
+            <span fb-like></span>
+            <hr>
             <h3>Featured Tags</h3>
             <span ng-repeat="tag in analysis.tags" class="tag">{{tag}}</span>
+            <h3>Color Tag</h3>
+            <span ng-repeat="color in photo.analysis[0].color.dominantColors" class="colorTags" style="background: {{color}}; border-color: {{color}}"></span>
             <h3>Tags</h3>
             <!-- <h3>{{}}</h3> -->
             <span ng-repeat="tag in analysis.alltags" class="tag">{{tag}}</span>
@@ -25,5 +27,4 @@
             <button type="button" class="btn btn-default pull-left" ng-click="deletePhoto(photo._id)">delete</button>
         </div>
     </div>
-    <hr>
 </div>
