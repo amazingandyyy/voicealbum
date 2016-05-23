@@ -4,6 +4,7 @@ var app = angular.module('albumApp');
 var start = false;
 var keyCode;
 var reader;
+var totalPhotos;
 
 app.controller('mainCtrl', function($scope, $timeout, Image, $location, $stateParams, $http, $state) {
     reader = 'UK English Male';
@@ -25,8 +26,9 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         keyCode = key.keyCode;
         console.log('keyCode: ', key.keyCode);
         if (keyCode === 113) {
-            responsiveVoice.speak(`This is intorduction and tips for VoiceAlbum.
-                                    Voice Album is the world's first and most friendly photo album for blind people.
+            responsiveVoice.speak(`Welcome, this is intorduction and tips for VoiceAlbum.
+                                    Do you know? There are 285 million people around the world are blind.
+                                    Voice Album is world's first photo album designed for blind people.
                                     Long Press A for 3 seconds to turn on Voice Album.
                                     Once Voice Album is been turned on, press A, again to start to listen to the Album.
                                     When you are listening to photos, you can
@@ -34,7 +36,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
                                     Press S for next photo.
                                     After all, long press F for 3 seconds to turn off Voice Album.
                                     Press Tab and enter to share photo to Facebook.
-                                    Btw the way, you cna Press 1 for female reader, or press 2 for male reader.
+                                    By the way, you cna Press 1 for female reader, or press 2 for male reader.
                                     Thanks for using VoiceAlbum. Hope you enjoy it.`,  `${reader}`);
         }
         if (keyCode === 97) {
@@ -46,10 +48,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         }
         if (initial > 97 * 8 - 1) {
             responsiveVoice.speak(`You just turned on Voice Album.
-                                Press A to start listen to the album.
-                                If you want to turn off voice album, just Long press F.
+                                You have ${totalPhotos} photos.
+                                Press A to start listen to them.
+                                If you want to turn off voice album, Long press F.
                                 For more tips, just Press Q.
-                                Enjoy it!`, "UK English Male");
+                                Enjoy it!`, `${reader}`);
             // responsiveVoice.speak(`You just turned on Voice Album.
             //                     Press A to start listen to the album.
             //                     Press F five timse to turned off and leave the album.
@@ -132,13 +135,13 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         }
         if (start && keyCode === 49) {
             reader = 'US English Female';
-            responsiveVoice.speak('I am your Voice Album reader.', `${reader}`);
+            responsiveVoice.speak('Hi, this is Christina.', `${reader}`);
         } else {
             share = 0;
         }
         if (start && keyCode === 50) {
             reader = 'UK English Male';
-            responsiveVoice.speak('I am your Voice Album reader.', `${reader}`);
+            responsiveVoice.speak('Hi, this is John.', `${reader}`);
         } else {
             share = 0;
         }
@@ -199,6 +202,7 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
     $scope.log = "";
     var imagesData = [];
     Image.getAll().then(res => {
+        totalPhotos = res.data.length;
         $scope.analysis = [];
         $scope.analysis.accentColor = []
         $scope.analysis.dominantColor = []
