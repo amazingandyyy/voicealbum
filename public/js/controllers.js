@@ -337,9 +337,7 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
         if (files.length > 0) {
             files.forEach(file => {
                 // console.log(file);
-                $timeout(function() {
-                    $scope.loader += 70 * (1 / files.length) * Math.random();
-                }, 200);
+
                 Upload.upload({
                         url: '/api/image',
                         data: {
@@ -371,10 +369,14 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
                                 console.log('imageWithUpdatedAnalysis: ', res);
                                 // imagesData.splice(index,1);
                                 // imagesData.unshift(res.data);
-                                var res = 100 - $scope.loader;
-                                console.log('resss: ', res);
-                                $scope.loader += res * (1 / files.length) + 20;
-                                console.log($scope.loader);
+                                // $timeout(function() {
+                                //     $scope.loader += Math.floor(100 * (1.01 / files.length)+1);
+                                //     console.log('loader: ', $scope.loader);
+                                // }, 200);
+                                $timeout(function() {
+                                    $scope.loader += Math.floor(100 * (1.01 / files.length)+1);
+                                    console.log('loader: ', $scope.loader);
+                                }, 200);
                                 Image.getAll().then(res => {
                                     $scope.analysis = [];
                                     $scope.analysis.accentColor = []
@@ -386,7 +388,7 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
                                     imagesData = res.data;
                                     // $scope.photos = imagesData.reverse();
                                     $scope.photos.forEach(img => {
-                                        console.log(img.analysis[0]);
+                                        // console.log(img.analysis[0]);
                                         var color = img.analysis[0].color;
                                         var tags = img.analysis[0].description.tags;
                                         if ($scope.analysis.accentColor.indexOf(color.accentColor) === -1) {

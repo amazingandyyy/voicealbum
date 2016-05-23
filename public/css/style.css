@@ -215,7 +215,7 @@ body {
     opacity: 0.4;
 }
 .loader.loaded, .loader.sub-loader.loaded {
-    transition: 5s all ease-in-out;
+    transition: 1s all ease-in-out;
     opacity: 0;
 }
 .loader.sub-loader {
