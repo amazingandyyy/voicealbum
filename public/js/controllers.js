@@ -4,7 +4,7 @@ var app = angular.module('albumApp');
 var start = false;
 var keyCode;
 
-app.controller('mainCtrl', function($scope, $timeout, Image, $location, $stateParams, $http) {
+app.controller('mainCtrl', function($scope, $timeout, Image, $location, $stateParams, $http, $state) {
     console.log('mainCtrl loaded');
     $scope.start = () => {
         start = !start;
@@ -14,6 +14,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
 
     var initial = 0;
     var over = 0;
+    var share = 0;
     var AlbumArr = [];
     var pageIndex;
     $scope.keypress = (key) => {
@@ -81,7 +82,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         if (keyCode === 102) {
             console.log('someone tends to turn off VoiceAlbum');
             over += 102;
-            console.log(initial);
+            console.log(over);
         } else {
             over = 0;
         }
@@ -110,6 +111,34 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             $http.get(`/api/image/${imageId}`).then(res => {
                 var quote = res.data.analysis[0].description.captions[0].text;
                 responsiveVoice.speak(quote, "US English Female");
+            }, err => {
+                console.log('err: ', err);
+            })
+        }
+        if (start && keyCode === 122) {
+            console.log('someone tends to share VoiceAlbum');
+            share += 122;
+            console.log(share);
+        } else {
+            share = 0;
+        }
+        if (share > 122 * 3 - 1) {
+            console.log('share');
+            console.log('read again: ', $stateParams);
+            var imageId = $stateParams.imageId;
+            $http.get(`/api/image/${imageId}`).then(res => {
+                share = 0;
+                var title = res.data.analysis[0].description.captions[0].text;
+                var imageUrl = res.data.url;
+                var imageId = res.data._id;
+                var abURL = $state.href($state.current.name, $state.params, {absolute: true})
+                console.log('title: ', title);
+                console.log('imageUrl: ', imageUrl);
+                console.log('imageId: ', imageId);
+                console.log('abURL: ', abURL);
+
+
+
             }, err => {
                 console.log('err: ', err);
             })
@@ -323,46 +352,6 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
                                 }, err => {
                                     if (err) return console.log('err: ', err);
                                 });
-                                // Image.getAll().then(res => {
-                                //     $scope.analysis = [];
-                                //     $scope.analysis.accentColor = []
-                                //     $scope.analysis.dominantColor = []
-                                //     $scope.analysis.tags = []
-                                //     var tagArr = {};
-                                //     var tagArrFinal = {};
-                                //     console.log(res.data);
-                                //     imagesData = res.data;
-                                //
-                                //     imagesData.forEach(img => {
-                                //         // console.log(img.analysis[0]);
-                                //         var color = img.analysis[0].color;
-                                //         var tags = img.analysis[0].description.tags;
-                                //         if ($scope.analysis.accentColor.indexOf(color.accentColor) === -1) {
-                                //             $scope.analysis.accentColor.push(color.accentColor)
-                                //         }
-                                //         if ($scope.analysis.dominantColor.indexOf(color.dominantColorBackground) === -1) {
-                                //             $scope.analysis.dominantColor.push(color.dominantColorBackground)
-                                //         }
-                                //         if ($scope.analysis.dominantColor.indexOf(color.dominantColorForeground) === -1) {
-                                //             $scope.analysis.dominantColor.push(color.dominantColorForeground)
-                                //         }
-                                //
-                                //         tags.forEach(tag => {
-                                //             if (tag.confidence > 0.7) {
-                                //                 if (!tagArr[tag.name]) {
-                                //                     tagArr[tag.name] = 1;
-                                //                 } else {
-                                //                     tagArr[tag.name] += 1;
-                                //                 }
-                                //             }
-                                //         })
-                                //         $scope.analysis.tags = tagArr;
-                                //     })
-                                //
-                                // }, err => {
-                                //     if (err) return console.log('err: ', err);
-                                // });
-
                             })
 
                         }, err => {
@@ -407,24 +396,14 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
 
 
 
-app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
+app.controller('photoCtrl', function($stateParams, $http, $scope, $location, $timeout) {
     console.log('photoCtrl loaded');
     console.log('start: ', start);
     $scope.responsiveVoice = responsiveVoice;
     $scope.speak = function(item) {
         responsiveVoice.speak(item, "US English Female");
     }
-    // $scope.keypressS = (key) => {
-        console.log('y');
-        // var item = $scope.photo.analysis[0].description.captions[0].text;
-        // console.log('key: ' ,key);
-        // console.log('item: ' ,item);
-        // if (keyCode === 115) {
-            // console.log('read again: ');
-            // console.log('read again: ', item);
-            // responsiveVoice.speak(item, "US English Female");
-        // }
-    // }
+    console.log('y');
     var imageId = $stateParams.imageId;
     $scope.photo = '';
     $scope.analysis = [];
@@ -451,6 +430,18 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
             item = res.data.analysis[0].description.captions[0].text;
             responsiveVoice.speak(item, "US English Female");
         }
+        $scope.myModel = {
+            Url: '',
+            Name: "AngularJS directives for social sharing buttons - Facebook, Google+, Twitter and Pinterest | Jason Watmore's Blog",
+            ImageUrl: 'http://www.jasonwatmore.com/pics/jason.jpg'
+        };
+
+
+
+
+
+
+
     }, err => {
         console.log('err: ', err);
     })
@@ -463,9 +454,15 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location) {
         })
     }
 
-    // console.log($scope.photo.analysis[0].tags);
+
+
+
 
 });
+
+
+
+
 app.controller('albumsCtrl', function($scope) {
     console.log('albumsCtrl loaded');
     var albums = [{

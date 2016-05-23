@@ -25,6 +25,7 @@
     "animate.css": "^3.5.1",
     "jquery-ui": "^1.11.4",
     "angular-dragdrop": "^1.0.13",
-    "angulike": "^1.2.0"
+    "angulike": "^1.2.0",
+    "angular-easy-social-share": "*"
   }
 }
