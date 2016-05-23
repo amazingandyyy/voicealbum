@@ -43,7 +43,19 @@ $(function() {
         // the `send` method of an XHR instance.
     }
 
-
+    $(document).keydown(function(event){
+        console.log('key from jquery: ', event.keyCode);
+        if(event.keyCode == 70){
+            console.log('yeah');
+            // var sharingURL = $(".fbshareBtn a").attr('href');
+            // console.log('$fbSHaring: ', sharingURL);
+            // $.post(`${sharingURL}`);
+            $(".fbshareBtn").find('.fa-facebook').click();
+        }
+    });
+    $(".fbshareBtn").click(function(){
+        console.log('fbshareBtn clicked by jquery');
+    })
 
 
 });

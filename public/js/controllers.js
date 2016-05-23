@@ -25,12 +25,12 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         if (keyCode === 113) {
             responsiveVoice.speak(`This is intorduction and tips for VoiceAlbum.
                                     Voice Album is the world's first photo album that can be read by just listining.
-                                    Press A, five times to turn on Voice Album.
+                                    Long Press A for 3 seconds to turn on Voice Album.
                                     Once Voice Album is been turned on, press A, again to start to listen to the Album.
                                     Press D to listen to the same phote again.
                                     Press S for next photo.
-                                    After all, press F five times to turn off Voice Album.
-                                    Press Tab and Enter to share to Facebook.
+                                    After all, long press F for 3 seconds to turn off Voice Album.
+                                    Press F to share photo to Facebook.
                                     If you want to listen to tips again, just press Q.
                                     Thanks for using. Hope you enjoy it.`, "UK English Male");
         }
@@ -41,12 +41,12 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         } else {
             initial = 0;
         }
-        if (initial > 97 * 5 - 1) {
+        if (initial > 97 * 8 - 1) {
             responsiveVoice.speak(`You just turned on Voice Album.
                                 Press A to start listen to the album.
                                 Press S to repeat the same phote again.
                                 Press D to view next photo.
-                                Press F five timse to turned off and leave the album.
+                                Long press F to turned off and leave the album.
                                 Hope you enjoy it!`, "UK English Male");
             // responsiveVoice.speak(`You just turned on Voice Album.
             //                     Press A to start listen to the album.
@@ -92,11 +92,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         } else {
             over = 0;
         }
-        if (over > 102 * 5 - 1) {
+        if (over > 102 * 10 - 1) {
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumOver = true;
             $scope.quoteActived = false;
-            responsiveVoice.speak('Voice Album turned off. If you want to turn on again, just press A 5 times. See you next time.', "US English Female");
+            responsiveVoice.speak('Turned off Voice Album . If you want to turn on again, just long press A for 3 seconds. See you next time.', "US English Female");
             $timeout(function() {
                 $scope.initializeVoiceAlbumoverOut = true;
             }, 1300)
