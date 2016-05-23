@@ -5,7 +5,7 @@ var start = false;
 var keyCode;
 var reader;
 var totalPhotos;
-
+var copy;
 app.controller('mainCtrl', function($scope, $timeout, Image, $location, $stateParams, $http, $state) {
     reader = 'UK English Male';
     console.log('mainCtrl loaded');
@@ -14,29 +14,40 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         $scope.quoteActived = !$scope.quoteActived
     }
     $scope.webcamStarted = false;
+    // $scope.copy = 'Press Q for VoiceAlbum tips!';
+    $scope.copy = null;
 
     var initial = 0;
     var over = 0;
     var share = 0;
     var AlbumArr = [];
     var pageIndex;
+
     $scope.keypress = (key) => {
+        function empty(){
+            $scope.copy = null
+        }
         $scope.initializeVoiceAlbumComplete = false;
         $scope.initializeVoiceAlbumCompleteOut = false;
         keyCode = key.keyCode;
         console.log('keyCode: ', key.keyCode);
         if (keyCode === 113) {
-            responsiveVoice.speak(`Welcome, this is intorduction and tips for VoiceAlbum.
-                                    Voice Album is world's first photo album designed for blind people.
-                                    Long Press A for 3 seconds to turn on Voice Album.
-                                    Once Voice Album is been turned on, press A, again to start to listen to the Album.
-                                    When you are listening to photos, you can
+            copy = `Welcome, this is intorduction and tips.
+                                    VoiceAlbum is world's first photo album designed for blind-people.
+                                    Here are some tips:
+
+                                    Long Press A to turn on VoiceAlbum.
+                                    Once Voice Album is been turned on, press A again, to start to listen to photos.
+                                    When listening to photos, you can
                                     Press D to replay.
                                     Press S for next photo.
-                                    After all, long press F for 3 seconds to turn off Voice Album.
-                                    Press Tab and enter to share photo to Facebook.
-                                    By the way, you cna Press 1 for female reader, or press 2 for male reader.
-                                    Thanks for using VoiceAlbum. Hope you enjoy it.`,  `${reader}`);
+                                    After all, long press F to turn off Voice Album.
+                                    By the way, you can press 1 or 2 to let Christina or John read for you.
+                                    Thanks for using VoiceAlbum. Hope you enjoy it.`
+            $scope.copy = copy;
+            responsiveVoice.speak(`${copy}`, `${reader}`,{
+                onend: empty
+            });
         }
         if (keyCode === 97) {
             console.log('someone tends to initialize VoiceAlbum');
@@ -47,10 +58,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         }
         if (initial > 97 * 8 - 1) {
             responsiveVoice.speak(`You just turned on Voice Album.
-                                You have ${totalPhotos} photos.
-                                Press A to start listen to them.
-                                If you want to turn off voice album, Long press F.
+                                You have ${totalPhotos} photos totally.
+                                Press A to start.
+                                Long press F to turn off.
                                 For more tips, just Press Q.
+                                Now, Press A to start.
                                 Enjoy it!`, `${reader}`);
             // responsiveVoice.speak(`You just turned on Voice Album.
             //                     Press A to start listen to the album.
@@ -77,7 +89,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
                             AlbumArr.unshift(image._id);
                         }
                     })
-                    if(AlbumArr.length === res.data.length){
+                    if (AlbumArr.length === res.data.length) {
                         $location.path(`photo/${AlbumArr[0]}`);
                     }
                     console.log(AlbumArr);
@@ -100,7 +112,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumOver = true;
             $scope.quoteActived = false;
-            responsiveVoice.speak('Turned off Voice Album . If you want to turn on again, just long press A for 3 seconds. See you next time.',  `${reader}`);
+            responsiveVoice.speak('Turned off Voice Album . Long press A to turn on again. See you next time.', `${reader}`);
             $timeout(function() {
                 $scope.initializeVoiceAlbumoverOut = true;
             }, 1300)
@@ -115,12 +127,20 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             var page = pageIndex % AlbumArr.length
             $location.path(`photo/${AlbumArr[page]}`)
         }
+        if (keyCode === 109) {
+            console.log('responsiveVoice stops');
+            $scope.copy = null;
+            responsiveVoice.pause();
+            responsiveVoice.speak('', `${reader}`);
+        }
         if (start && keyCode === 115) {
             console.log('read again: ', $stateParams);
             var imageId = $stateParams.imageId;
             $http.get(`/api/image/${imageId}`).then(res => {
-                var quote = res.data.analysis[0].description.captions[0].text;
-                responsiveVoice.speak(quote,  `${reader}`);
+                var quote = res.data.analysis[0].description.captions[0].text + '.  Key words are, ' + res.data.analysis[0].description.tags;;
+                responsiveVoice.speak(quote, `${reader}`, {
+                    rate: 0.9
+                });
             }, err => {
                 console.log('err: ', err);
             })
@@ -132,15 +152,19 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         } else {
             share = 0;
         }
-        if (start && keyCode === 49) {
+        if (keyCode === 49) {
             reader = 'US English Female';
+            // if (start) {
             responsiveVoice.speak('Hi, this is Christina.', `${reader}`);
+            // }
         } else {
             share = 0;
         }
-        if (start && keyCode === 50) {
+        if (keyCode === 50) {
             reader = 'UK English Male';
+            // if (start) {
             responsiveVoice.speak('Hi, this is John.', `${reader}`);
+            // }
         } else {
             share = 0;
         }
@@ -153,7 +177,9 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
                 var title = res.data.analysis[0].description.captions[0].text;
                 var imageUrl = res.data.url;
                 var imageId = res.data._id;
-                var abURL = $state.href($state.current.name, $state.params, {absolute: true})
+                var abURL = $state.href($state.current.name, $state.params, {
+                    absolute: true
+                })
                 console.log('title: ', title);
                 console.log('imageUrl: ', imageUrl);
                 console.log('imageId: ', imageId);
@@ -297,7 +323,7 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
                         var imageId = res.data._id;
                         $http({
                             method: 'POST',
-                            url: `https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Tags,Color,Description`,
+                            url: `https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Tags,Color,Description,Faces,Categories,Adult`,
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Ocp-Apim-Subscription-Key': `${CVPkey}`
@@ -450,8 +476,11 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location, $ti
         })
         var item;
         if (start) {
-            item = res.data.analysis[0].description.captions[0].text;
-            responsiveVoice.speak(item, `${reader}`);
+            item = res.data.analysis[0].description.captions[0].text + ' Key words are,' + res.data.analysis[0].description.tags;
+            console.log('read item: ', item);
+            responsiveVoice.speak(item, `${reader}`, {
+                rate: 0.9
+            });
         }
         $scope.myModel = {
             Url: '',
