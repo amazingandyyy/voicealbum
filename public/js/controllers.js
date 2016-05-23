@@ -27,7 +27,6 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         console.log('keyCode: ', key.keyCode);
         if (keyCode === 113) {
             responsiveVoice.speak(`Welcome, this is intorduction and tips for VoiceAlbum.
-                                    Do you know? There are 285 million people around the world are blind.
                                     Voice Album is world's first photo album designed for blind people.
                                     Long Press A for 3 seconds to turn on Voice Album.
                                     Once Voice Album is been turned on, press A, again to start to listen to the Album.
