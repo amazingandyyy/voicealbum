@@ -405,7 +405,9 @@ h3, h4 {
 
 /*photo.html*/
 .fbshareBtn {
-    opacity: 0.1;
+    opacity: 0;
+    outline: none;
+    -webkit-outline: none;
 }
 .tag {
     background: white;

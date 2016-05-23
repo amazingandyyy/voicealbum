@@ -3,8 +3,10 @@
 var app = angular.module('albumApp');
 var start = false;
 var keyCode;
+var reader;
 
 app.controller('mainCtrl', function($scope, $timeout, Image, $location, $stateParams, $http, $state) {
+    reader = 'UK English Male';
     console.log('mainCtrl loaded');
     $scope.start = () => {
         start = !start;
@@ -24,15 +26,16 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         console.log('keyCode: ', key.keyCode);
         if (keyCode === 113) {
             responsiveVoice.speak(`This is intorduction and tips for VoiceAlbum.
-                                    Voice Album is the world's first photo album that can be read by just listining.
+                                    Voice Album is the world's first and most friendly photo album for blind people.
                                     Long Press A for 3 seconds to turn on Voice Album.
                                     Once Voice Album is been turned on, press A, again to start to listen to the Album.
-                                    Press D to listen to the same phote again.
+                                    When you are listening to photos, you can
+                                    Press D to replay.
                                     Press S for next photo.
                                     After all, long press F for 3 seconds to turn off Voice Album.
-                                    Press F to share photo to Facebook.
-                                    If you want to listen to tips again, just press Q.
-                                    Thanks for using. Hope you enjoy it.`, "UK English Male");
+                                    Press Tab and enter to share photo to Facebook.
+                                    Btw the way, you cna Press 1 for female reader, or press 2 for male reader.
+                                    Thanks for using VoiceAlbum. Hope you enjoy it.`,  `${reader}`);
         }
         if (keyCode === 97) {
             console.log('someone tends to initialize VoiceAlbum');
@@ -44,10 +47,9 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         if (initial > 97 * 8 - 1) {
             responsiveVoice.speak(`You just turned on Voice Album.
                                 Press A to start listen to the album.
-                                Press S to repeat the same phote again.
-                                Press D to view next photo.
-                                Long press F to turned off and leave the album.
-                                Hope you enjoy it!`, "UK English Male");
+                                If you want to turn off voice album, just Long press F.
+                                For more tips, just Press Q.
+                                Enjoy it!`, "UK English Male");
             // responsiveVoice.speak(`You just turned on Voice Album.
             //                     Press A to start listen to the album.
             //                     Press F five timse to turned off and leave the album.
@@ -96,7 +98,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('VoiceAlbum initialized');
             $scope.initializeVoiceAlbumOver = true;
             $scope.quoteActived = false;
-            responsiveVoice.speak('Turned off Voice Album . If you want to turn on again, just long press A for 3 seconds. See you next time.', "US English Female");
+            responsiveVoice.speak('Turned off Voice Album . If you want to turn on again, just long press A for 3 seconds. See you next time.',  `${reader}`);
             $timeout(function() {
                 $scope.initializeVoiceAlbumoverOut = true;
             }, 1300)
@@ -116,7 +118,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             var imageId = $stateParams.imageId;
             $http.get(`/api/image/${imageId}`).then(res => {
                 var quote = res.data.analysis[0].description.captions[0].text;
-                responsiveVoice.speak(quote, "US English Female");
+                responsiveVoice.speak(quote,  `${reader}`);
             }, err => {
                 console.log('err: ', err);
             })
@@ -125,6 +127,18 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('someone tends to share VoiceAlbum');
             share += 122;
             console.log(share);
+        } else {
+            share = 0;
+        }
+        if (start && keyCode === 49) {
+            reader = 'US English Female';
+            responsiveVoice.speak('I am your Voice Album reader.', `${reader}`);
+        } else {
+            share = 0;
+        }
+        if (start && keyCode === 50) {
+            reader = 'UK English Male';
+            responsiveVoice.speak('I am your Voice Album reader.', `${reader}`);
         } else {
             share = 0;
         }
@@ -407,7 +421,7 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location, $ti
     console.log('start: ', start);
     $scope.responsiveVoice = responsiveVoice;
     $scope.speak = function(item) {
-        responsiveVoice.speak(item, "US English Female");
+        responsiveVoice.speak(item, `${reader}`);
     }
     console.log('y');
     var imageId = $stateParams.imageId;
@@ -434,7 +448,7 @@ app.controller('photoCtrl', function($stateParams, $http, $scope, $location, $ti
         var item;
         if (start) {
             item = res.data.analysis[0].description.captions[0].text;
-            responsiveVoice.speak(item, "US English Female");
+            responsiveVoice.speak(item, `${reader}`);
         }
         $scope.myModel = {
             Url: '',
