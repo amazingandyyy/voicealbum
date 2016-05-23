@@ -4,7 +4,8 @@ $(function() {
         width: 240,
         height: 180,
         image_format: 'jpeg',
-        jpeg_quality: 90
+        jpeg_quality: 90,
+       force_flash: true
     });
     Webcam.attach('#my_camera');
     $('#takePhoto').click(take_snapshot);
