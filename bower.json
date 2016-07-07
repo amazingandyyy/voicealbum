@@ -27,5 +27,8 @@
     "angular-dragdrop": "^1.0.13",
     "angulike": "^1.2.0",
     "angular-easy-social-share": "*"
+  },
+  "resolutions": {
+    "angular": "1.5.5"
   }
 }
