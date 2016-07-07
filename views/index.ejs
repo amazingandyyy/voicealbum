@@ -29,7 +29,7 @@
     <script src="js/module.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
-    <script src="js/webcam.min.js"></script>
+    <!-- <script src="js/webcam.min.js"></script> -->
     <script src="js/main.js"></script>
 </head>
 
@@ -48,7 +48,7 @@
                     <!-- <li><a ui-sref="photos"><span class="icon-pictures"></span></a></li> -->
                     <li><a ui-sref="photos" ng-click="start()"><span class="icon-quote"><span ng-show="quoteActived" class="quoteActived"></span></span></a></li>
                     <!-- <li><a ui-sref="albums"><span class="icon-layers"></span></a></li> -->
-                    <li ng-click="startWebCam()"><a><span class="icon-camera"></span></a></li>
+                    <!-- <li ng-click="startWebCam()"><a><span class="icon-camera"></span></a></li> -->
                     <li><a href="https://github.com/amazingandyyy/album-app" target="_blank"><span class="icon-genius"></span></a></li>
                 </ul>
             </div>
@@ -75,18 +75,15 @@
         <h3><span class="logo">VoiceAlbum</span> turned off</h3>
     </div>
     <hr>
-
-    <div ng-show="webcamStarted" ng-class="{'bounceIn': webcamStarted}" class="animated webcam" data-drag="true" data-jqyoui-options="{revert2: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true}">
-        <!-- <webcam channel="myChannel" on-stream="onStream(stream)" on-streaming="onSuccess(data)" on-error="onError(err)"></webcam> -->
+    <!-- <div ng-show="webcamStarted" ng-class="{'bounceIn': webcamStarted}" class="animated webcam" data-drag="true" data-jqyoui-options="{revert2: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true}">
         <div id="my_camera"></div>
         <button class="btn btn-default btn-xs" value="Take Snapshot" id="takePhoto">Take photo!</button>
         <div id="results"></div>
-        <!-- <div class="nav"><span class="pull-left">S</span> <span class="pull-left">M</span> <span class="pull-left">L</span></div> -->
+        <div class="nav"><span class="pull-left">S</span> <span class="pull-left">M</span> <span class="pull-left">L</span></div>
+        <ng-camera capture-message="Cheeeese!" countdown="3" output-height="160" output-width="213" viewer-height="320" viewer-width="426" crop-height="90" crop-width="120" image-format="jpeg" jpeg-quality="100" action-message="Take picture" snapshot="vm.picture"
+            flash-fallback-url="/vendors/webcamjs/webcam.swf" overlay-url="/overlay.png" shutter-url="/shutter.mp3"></ng-camera>
 
-        <!-- <ng-camera capture-message="Cheeeese!" countdown="3" output-height="160" output-width="213" viewer-height="320" viewer-width="426" crop-height="90" crop-width="120" image-format="jpeg" jpeg-quality="100" action-message="Take picture" snapshot="vm.picture"
-            flash-fallback-url="/vendors/webcamjs/webcam.swf" overlay-url="/overlay.png" shutter-url="/shutter.mp3"></ng-camera> -->
-
-        <!-- <ng-camera
+        <ng-camera
               type="photo"
               enabled="true"
               width="320"
@@ -94,8 +91,8 @@
               countdown="3"
               ng-model="media"
               capture="capturePhoto(media)"
-              capture-message="Go!"></ng-camera> -->
-        <!-- <ng-camera
+              capture-message="Go!"></ng-camera>
+        <ng-camera
                   capture-message="Cheeeese!"
                   countdown="3"
                   output-height="160"
@@ -111,9 +108,8 @@
                   flash-fallback-url="/vendors/webcamjs/webcam.swf"
                   overlay-url="/overlay.png"
                   shutter-url="/shutter.mp3"
-              ></ng-camera> -->
-
-    </div>
+              ></ng-camera>
+    </div> -->
     <div class="copyLog animated" ng-class="{'bounceIn': copy, 'fadeOut': !copy}"  data-drag="true" data-jqyoui-options="{revert2: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true}"><span class="icon-lightbulb"></span>&nbsp;&nbsp;{{copy}}</div>
 
 </body>

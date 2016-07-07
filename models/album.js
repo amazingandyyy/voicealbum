@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 // var Image = require('./image');
+// var io = require('socket.io')();
 
 var albumSchema = new mongoose.Schema({
     name: {
@@ -80,6 +81,8 @@ albumSchema.statics.addPhoto = function(params, cb) {
             cb(err)
         })
 };
+
+
 
 var Album = mongoose.model('Album', albumSchema);
 module.exports = Album;

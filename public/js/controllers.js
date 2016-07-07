@@ -13,7 +13,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
         start = !start;
         $scope.quoteActived = !$scope.quoteActived
     }
-    $scope.webcamStarted = false;
+    // $scope.webcamStarted = false;
     // $scope.copy = 'Press Q for VoiceAlbum tips!';
     $scope.copy = null;
 
@@ -228,9 +228,9 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
     }
 
 
-    $scope.startWebCam = () => {
-            $scope.webcamStarted = !$scope.webcamStarted;
-        }
+    // $scope.startWebCam = () => {
+    //         $scope.webcamStarted = !$scope.webcamStarted;
+    //     }
         // var webcamData;
         // $scope.onError = function(err) {
         //     console.log('err from webcam: ', err);
