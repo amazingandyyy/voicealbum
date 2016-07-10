@@ -10,11 +10,11 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
     reader = 'UK English Male';
     console.log('mainCtrl loaded');
     $scope.start = () => {
-        start = !start;
-        $scope.quoteActived = !$scope.quoteActived
-    }
-    // $scope.webcamStarted = false;
-    // $scope.copy = 'Press Q for VoiceAlbum tips!';
+            start = !start;
+            $scope.quoteActived = !$scope.quoteActived
+        }
+        // $scope.webcamStarted = false;
+        // $scope.copy = 'Press Q for VoiceAlbum tips!';
     $scope.copy = null;
 
     var initial = 0;
@@ -69,12 +69,12 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
                                 For more tips, just Press Q.
                                 Now, Press A to start.
                                 Enjoy it!`, `${reader}`
-                                if(!start){
-                                    $scope.copy = null
-                                    responsiveVoice.speak(`${copy}`, `${reader}`, {
-                                        onend: empty
-                                    });
-}
+            if (!start) {
+                $scope.copy = null
+                responsiveVoice.speak(`${copy}`, `${reader}`, {
+                    onend: empty
+                });
+            }
             // responsiveVoice.speak(`You just turned on Voice Album.
             //                     Press A to start listen to the album.
             //                     Press F five timse to turned off and leave the album.
@@ -116,7 +116,7 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
             console.log('someone tends to turn off VoiceAlbum');
             over += 102;
             console.log(over);
-            if(start){
+            if (start) {
                 $scope.copy = 'Press [F] for 3 seconds to turn off VoiceAlbum';
                 $timeout(function() {
                     $scope.copy = null;
@@ -231,27 +231,27 @@ app.controller('mainCtrl', function($scope, $timeout, Image, $location, $statePa
     // $scope.startWebCam = () => {
     //         $scope.webcamStarted = !$scope.webcamStarted;
     //     }
-        // var webcamData;
-        // $scope.onError = function(err) {
-        //     console.log('err from webcam: ', err);
-        // };
-        // $scope.onStream = function(stream) {
-        //     console.log('stream from webcam: ', stream);
-        // };
-        // $scope.onSuccess = function(data) {
-        //     console.log('webcam onSuccess:', data);
-        //     // console.log();
-        //     webcamData = data;
-        //     console.log('webcamData: ', webcamData);
-        // };
-        // $scope.myChannel = {
-        //     videoHeight: 400,
-        //     videoWidth: 300,
-        //     video: webcamData
-        // };
-        // $scope.$watch('media', function(media) {
-        //         console.log(media);
-        //     });
+    // var webcamData;
+    // $scope.onError = function(err) {
+    //     console.log('err from webcam: ', err);
+    // };
+    // $scope.onStream = function(stream) {
+    //     console.log('stream from webcam: ', stream);
+    // };
+    // $scope.onSuccess = function(data) {
+    //     console.log('webcam onSuccess:', data);
+    //     // console.log();
+    //     webcamData = data;
+    //     console.log('webcamData: ', webcamData);
+    // };
+    // $scope.myChannel = {
+    //     videoHeight: 400,
+    //     videoWidth: 300,
+    //     video: webcamData
+    // };
+    // $scope.$watch('media', function(media) {
+    //         console.log(media);
+    //     });
 
 });
 
@@ -271,60 +271,63 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
         console.log(res.data);
         imagesData = res.data;
         $scope.photos = imagesData.reverse();
-        $scope.photos.forEach(img => {
-            // console.log(img.analysis[0]);
-            var color = img.analysis[0].color;
-            // console.log('img.analysis[0].description.tags: ', img.analysis[0].description.tags);
-            // console.log('mg.analysis[0].tags: ', );
-            var tags = img.analysis[0].description.tags;
-            // img.analysis[0].tags.forEach(tag => {
-            //     if(tag.confidence > 0.8){
-            //         tags.push(tag.name);
-            //     }
-            // });
-            // console.log('tagsss: ', tags);
-            if ($scope.analysis.accentColor.indexOf(color.accentColor) === -1) {
-                $scope.analysis.accentColor.push(color.accentColor)
-            }
-            if ($scope.analysis.dominantColor.indexOf(color.dominantColorBackground) === -1) {
-                $scope.analysis.dominantColor.push(color.dominantColorBackground)
-            }
-            if ($scope.analysis.dominantColor.indexOf(color.dominantColorForeground) === -1) {
-                $scope.analysis.dominantColor.push(color.dominantColorForeground)
-            }
-
-            tags.forEach(tag => {
-                if (!tagArr[tag]) {
-                    tagArr[tag] = 1;
-                } else {
-                    tagArr[tag] += 1;
+        if ($scope.photos) {
+            $scope.photos.forEach(img => {
+                // console.log(img.analysis[0]);
+                var color = img.analysis[0].color;
+                // console.log('img.analysis[0].description.tags: ', img.analysis[0].description.tags);
+                // console.log('mg.analysis[0].tags: ', );
+                var tags = img.analysis[0].description.tags;
+                // img.analysis[0].tags.forEach(tag => {
+                //     if(tag.confidence > 0.8){
+                //         tags.push(tag.name);
+                //     }
+                // });
+                // console.log('tagsss: ', tags);
+                if ($scope.analysis.accentColor.indexOf(color.accentColor) === -1) {
+                    $scope.analysis.accentColor.push(color.accentColor)
                 }
-            })
+                if ($scope.analysis.dominantColor.indexOf(color.dominantColorBackground) === -1) {
+                    $scope.analysis.dominantColor.push(color.dominantColorBackground)
+                }
+                if ($scope.analysis.dominantColor.indexOf(color.dominantColorForeground) === -1) {
+                    $scope.analysis.dominantColor.push(color.dominantColorForeground)
+                }
 
-            // console.log('tagArr: ', tagArr);
-
-            function sortObject(obj) {
-                var arr = [];
-                var prop;
-                for (prop in obj) {
-                    if (obj.hasOwnProperty(prop) && obj[prop] > 1) {
-                        arr.unshift({
-                            'key': prop,
-                            'value': obj[prop]
-                        });
+                tags.forEach(tag => {
+                    if (!tagArr[tag]) {
+                        tagArr[tag] = 1;
+                    } else {
+                        tagArr[tag] += 1;
                     }
-                }
-                arr.sort(function(a, b) {
-                    return a.value - b.value;
-                });
-                return arr;
-            }
-            var sorttedTagArr = [];
-            var sorttedTagArr = sortObject(tagArr).reverse();
-            // console.log(sorttedTagArr);
+                })
 
-            $scope.analysis.tags = sorttedTagArr;
-        })
+                // console.log('tagArr: ', tagArr);
+
+                function sortObject(obj) {
+                    var arr = [];
+                    var prop;
+                    for (prop in obj) {
+                        if (obj.hasOwnProperty(prop) && obj[prop] > 1) {
+                            arr.unshift({
+                                'key': prop,
+                                'value': obj[prop]
+                            });
+                        }
+                    }
+                    arr.sort(function(a, b) {
+                        return a.value - b.value;
+                    });
+                    return arr;
+                }
+                var sorttedTagArr = [];
+                var sorttedTagArr = sortObject(tagArr).reverse();
+                // console.log(sorttedTagArr);
+
+                $scope.analysis.tags = sorttedTagArr;
+            })
+        }
+
 
     }, err => {
         if (err) return console.log('err: ', err);
@@ -374,7 +377,7 @@ app.controller('photosCtrl', function($scope, Upload, Image, $http, $timeout) {
                                 //     console.log('loader: ', $scope.loader);
                                 // }, 200);
                                 $timeout(function() {
-                                    $scope.loader += Math.floor(100 * (1.01 / files.length)+1);
+                                    $scope.loader += Math.floor(100 * (1.01 / files.length) + 1);
                                     console.log('loader: ', $scope.loader);
                                 }, 200);
                                 Image.getAll().then(res => {
